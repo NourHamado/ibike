@@ -38,13 +38,15 @@ def init(group_key):
 				   'available_roles' : ss.roles,
 				   'roles_reported' : list((True, True, True, True))
 		      }
-	os.mkdir(dirpath)
 	try:
+		os.mkdir(dirpath)
 		with open(filepath,'w') as file:
 			json.dump(group_state,file)
 		return group_state
 	except FileNotFoundError:
 		pass
+	except:
+		print('An error occurred with the file.')
 
 def load(group_key):
 	dirpath = 'files/data/'+group_key
