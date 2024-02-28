@@ -49,9 +49,10 @@ def init(group_key):
 		print('An error occurred with the file.')
 
 def load(group_key):
-	dirpath = 'files/data/'+group_key
-	filepath = dirpath+'/'+group_key+'_state.json'
+
 	try:
+		dirpath = 'files/data/'+group_key
+		filepath = dirpath+'/'+group_key+'_state.json'
 		with open(filepath,'r') as file:
 			group_state = json.load(file)
 	except:
