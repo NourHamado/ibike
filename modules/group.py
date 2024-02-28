@@ -38,22 +38,17 @@ def init(group_key):
 				   'available_roles' : ss.roles,
 				   'roles_reported' : list((True, True, True, True))
 		      }
-	try:
-		os.mkdir(dirpath)
-		with open(filepath,'w') as file:
-			json.dump(group_state,file)
-	except FileNotFoundError:
-		pass
-	except:
-		print('An error occurred with the file.')
-
+		
+	os.mkdir(dirpath)
+	with open(filepath,'w') as file:
+		json.dump(group_state,file)
 	return group_state
 
 def load(group_key):
 
+	dirpath = 'files/data/'+group_key
+	filepath = dirpath+'/'+group_key+'_state.json'
 	try:
-		dirpath = 'files/data/'+group_key
-		filepath = dirpath+'/'+group_key+'_state.json'
 		with open(filepath,'r') as file:
 			group_state = json.load(file)
 	except:
