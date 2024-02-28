@@ -42,11 +42,12 @@ def init(group_key):
 		os.mkdir(dirpath)
 		with open(filepath,'w') as file:
 			json.dump(group_state,file)
-		return group_state
 	except FileNotFoundError:
 		pass
 	except:
 		print('An error occurred with the file.')
+
+	return group_state
 
 def load(group_key):
 
