@@ -116,7 +116,7 @@ def init():
 				else:
 					game_state = game.init(ss.name, group_num)
 					ss.game_state = game_state
-					st.experimental_rerun() #causes the submit button to only need to be pressed once
+					st.rerun() #causes the submit button to only need to be pressed once
 
 	elif not ss.setup_complete:
 		st.write("Please specify the limit of concurrent, unfulfilled customer orders that you would like to allow, along with the total number of fulfilled orders required to complete the simulation.\nWhen you are done, click \'Complete Setup\' below.")
