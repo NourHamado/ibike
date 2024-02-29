@@ -15,7 +15,7 @@ def init(group_key):
 	# initialized as None. Each group_state will expect a group of 5 players, with corresponding
 	# names and roles to be typed/chosen in-game
 	# make/store path for directory and json file for easy access
-	dirpath = 'files/data/'+group_key
+	dirpath = '/files/data/'+group_key
 	filepath = dirpath+'/'+group_key+'_state.json'
 
 	group_state = {'group_key' : group_key, 
