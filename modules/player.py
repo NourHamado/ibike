@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from modules import Project_Manager as pr_m, Design_Engineer as d_e, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
-from modules import mainform as survey, form13 as form
+from modules import mainform as survey, form13 as form, Button_Format as format
 
 def render():
 	if 'setup_complete' not in ss:
@@ -19,33 +19,7 @@ def render():
 		st.write('Work with your team members to complete orders!')
 		ss.group_state = group.load(ss.group)
 		if ss.group_state['status'] != 'completed':
-			st.markdown("""
-			<style>
-				button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
-  					font-size: 20px;
-  					color: #100e10;
-			   		font-weight: bold;
-				}
-				.stTabs [data-baseweb="tab-list"] {
-					gap: 15px;
-				}
-
-				.stTabs [data-baseweb="tab"] {
-					height: 45px;
-					white-space: pre-wrap;
-					background-color: #F0F2F6;
-			   		border: 1px solid #100e10;
-					border-radius: 10px;
-					gap: 25px;
-					padding-top: 30px;
-					padding-bottom: 30px;
-				}
-
-				.stTabs [aria-selected="true"] {
-  					background-color: #be4141;
-				}
-
-			</style>""", unsafe_allow_html=True)
+			format.Tab_Format()
 			tab1, tab2, tab3 = st.tabs(["Your Page","Feedback Page","Group Status"])
 			with tab1:
 				display_role_page()
@@ -65,6 +39,7 @@ def render():
 def display_current_orders():
 	st.write("Click the \"Refresh Orders\" button below in order to refresh your page and view current orders.")
 	st.button("Refresh Orders")
+	format.Button_Format()
 	
 	if len(ss.group_state['orders']) > 0:
 
