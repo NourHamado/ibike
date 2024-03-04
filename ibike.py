@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import session_state as ss
 import os
 import shutil
-from modules import instructor, player, game, rejoin
+from modules import instructor, player, game, rejoin, Button_Format as format
 
 def switch_welcome():
 	ss.welcomed = True
@@ -130,21 +130,26 @@ def main():
 	# display_developer_buttons():
 
 	if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
+		format.Button_Format()
 		ss.is_instructor = True
 		ss.role = 'instructor'
 		ss.group = 'instructor'
 		welcome_instructor()
 
 	elif ss.welcomed and ss.is_instructor:
+		format.Button_Format()
 		instructor.render()
 
 	elif not ss.welcomed and not ss.is_instructor:
+		format.Button_Format()
 		welcome_player()
 
 	elif ss.welcomed and not ss.rejoining:
+		format.Button_Format()
 		player.render()
 
 	elif ss.welcomed and ss.rejoining:
+		format.Button_Format()
 		rejoin.display_rejoin_page()
 
 if __name__ == '__main__':

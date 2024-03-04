@@ -1,11 +1,13 @@
 import streamlit as st
 from streamlit import session_state as ss
-from modules import game, group, rejoin
+from modules import game, group, rejoin, Button_Format as format
 import time
 import shutil
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+
+format.Button_Format()
 
 def game_reset():
 	dirpath = 'files/data'
