@@ -102,7 +102,7 @@ def render():
 
     st.markdown('---')
 
-    ss.date = st.date_input("Choose the order complation data", value=None, format="MM.DD.YYYY")
+    ss.date = st.date_input("Choose the order complation data", value=None, format="MM/DD/YYYY")
     
 def feedback():
     st.header("Feedback **:red[TO]**")
