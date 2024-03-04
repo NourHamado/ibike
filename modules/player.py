@@ -42,7 +42,7 @@ def render():
 				}
 
 				.stTabs [aria-selected="true"] {
-  					background-color: #ce323c;
+  					background-color: #be4141;
 				}
 
 			</style>""", unsafe_allow_html=True)
