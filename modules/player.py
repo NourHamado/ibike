@@ -56,21 +56,44 @@ def display_current_orders():
 			st.write('Total Number of Completed Orders: '+str(len(ss.group_state['completed'])))
 			col1, col2 = st.columns(2)
 			with col1:
-				st.radio('Orders Ready for your input:  ', order_keys, key='order_choice')
+				idx = ss.roles.index(ss.role)
+				if idx < 3:
+					st.radio('Orders Ready for your input:  ', order_keys, key='order_choice')
+				else:
+					st.markdown(
+    					"""
+					<style>
+					span[data-baseweb="tag"] {
+						background-color: #243b3b !important;
+					}
+					</style>
+					""",
+    					unsafe_allow_html=True,
+					)
+					selected_order = st.multiselect('Orders Ready for your input:  ', order_keys)
 			with col2:
 				st.write('Please select an order for processing:')
-				if 'order_choice' in ss:
-					st.button("View "+ss.order_choice, on_click=switch_order_view)
-					if ss.order_view:
-						st.write(ss.group_state['orders'][ss.order_choice])
-					idx = ss.roles.index(ss.role)
-					if idx < 4:
-						button_text = "Send "+ss.order_choice+" to "+ss.roles[idx+1]
-					else:
-						button_text = "Complete Order"
-					st.button(button_text, on_click=move_order, args=(ss.order_choice, ))
+				idx = ss.roles.index(ss.role)
+				if idx < 3:
+					if 'order_choice' in ss:
+						st.button("View "+ss.order_choice, on_click=switch_order_view)
+						if ss.order_view:
+							st.write(ss.group_state['orders'][ss.order_choice])
+						if idx < 3:
+							button_text = "Send "+ss.order_choice+" to "+ss.roles[idx+1]
+						st.button(button_text, on_click=move_order, args=(ss.order_choice, ))
+				else:
+					if selected_order:
+						st.button("View", on_click=switch_order_view)
+						if ss.order_view:
+							for order in selected_order:
+								st.write(ss.group_state['orders'][order])
+						if idx == 3:
+							button_text = "Send all selected orders to "+ss.roles[idx+1]
+						else:
+							button_text = "Complete all selected Orders"
+						st.button(button_text, on_click=move_orders, args=(selected_order, ))
 
-		
 		else:
 			st.write('There are no orders for you to work on right now.')
 
@@ -303,12 +326,6 @@ def move_order(order_key):
 	# get most up-to-date group state first:
 	group_state = group.load(ss.group)
 	group_state['orders'][order_key]['checklist'][ss.role] = True
-	
-	if idx == 4:
-		group_state['completed'][order_key] = group_state['orders'][order_key]
-		del group_state['orders'][order_key]
-		if len(group_state['completed']) >= ss.completed_limit :
-			group_state['status']='completed'
 			
 	group.save_group_state(group_state) #group state must be saved before the below call since it too modifies the group state
 
@@ -316,7 +333,22 @@ def move_order(order_key):
 		pr_m.submit_order_info(order_key)
 	if idx == 1:
 		d_e.submit_order_info(order_key)
-	
+
+def move_orders(order_keys):
+	idx = ss.roles.index(ss.role)
+	# get most up-to-date group state first:
+	group_state = group.load(ss.group)
+
+	for order_key in order_keys:
+		group_state['orders'][order_key]['checklist'][ss.role] = True
+			
+		if idx == 4:
+			group_state['completed'][order_key] = group_state['orders'][order_key]
+			del group_state['orders'][order_key]
+			if len(group_state['completed']) >= ss.completed_limit :
+				group_state['status']='completed'
+
+	group.save_group_state(group_state) #group state must be saved before the below call since it too modifies the group state
 
 def display_orders_graph():
 	data = np.array([0, 0, 0, 0, 0])
