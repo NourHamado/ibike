@@ -84,7 +84,7 @@ def display_current_orders():
 						st.button(button_text, on_click=move_order, args=(ss.order_choice, ))
 				else:
 					if selected_order:
-						st.button("View", on_click=switch_order_view)
+						st.button("View selected orders", on_click=switch_order_view)
 						if ss.order_view:
 							for order in selected_order:
 								st.write(ss.group_state['orders'][order])
