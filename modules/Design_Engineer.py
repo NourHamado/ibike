@@ -1,9 +1,11 @@
 import streamlit as st
 import numpy as np
 import sympy as sp
+import time
+import decimal
 import matplotlib.pyplot as plt
 from streamlit import session_state as ss
-from modules import group, player
+from modules import group, player, game
 from PIL import Image, ImageDraw, ImageFont
 import os
 from os import path
@@ -382,10 +384,21 @@ def submit_order_info(order_key):
 	group.save_group_state(group_state)
 
 def submit_report_info(fig, group_state):
+	group_state = group.load(ss.group_state.get('group_key'))
 	if not os.path.exists(ss.filepath+'report/'):
 		os.makedirs(ss.filepath+'report/')
+
+	elapsed_time = decimal.Decimal(time.time() - group_state['start_time'])
+	elapsed_minutes = decimal.Decimal(elapsed_time / 60)
+	decimal.getcontext().rounding = decimal.ROUND_DOWN
+	elapsed_minutes = round(elapsed_minutes, 0)				
+	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
+	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
+
 	with open(ss.filepath+'report/'+ 'DesignEngineer' + '.txt', 'w') as f:
-		f.write('Wheel Base: ' + str(ss.design_parameters[0]) + '\n' +
+		f.write(ss.group + ': Design Engineer: '+ ss.name + '\n')
+		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
+				'Wheel Base: ' + str(ss.design_parameters[0]) + '\n' +
 				'Total Mass: ' + str(ss.design_parameters[1]) + '\n' +
 				'Front Wheel Radius: '+ str(ss.design_parameters[2]) + '\n' +
 				'Rear Wheel Radius: '+ str(ss.design_parameters[3]))

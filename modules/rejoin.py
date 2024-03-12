@@ -162,7 +162,6 @@ def sync_player():
 		ss.is_instructor = True
 		ss.code_written = True
 		ss.game_state = game_state
-		
 	else: 
 		for dict in game_state['rejoin_codes']:
 			if ss.code_input == dict['code']:

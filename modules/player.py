@@ -198,18 +198,23 @@ def role_assign(role):
 	if ss.player == 1:
 		group_state['p1_name'] = ss.name
 		group_state['p1_role'] = ss.role
+		group_state['start_time'] = time.time()
 	elif ss.player == 2:
 		group_state['p2_name'] = ss.name
 		group_state['p2_role'] = ss.role
+		group_state['start_time'] = time.time()
 	elif ss.player == 3:
 		group_state['p3_name'] = ss.name
 		group_state['p3_role'] = ss.role
+		group_state['start_time'] = time.time()
 	elif ss.player == 4:
 		group_state['p4_name'] = ss.name
 		group_state['p4_role'] = ss.role
+		group_state['start_time'] = time.time()
 	else:
 		group_state['p5_name'] = ss.name
 		group_state['p5_role'] = ss.role
+		group_state['start_time'] = time.time()
 			
 	group.save_group_state(group_state)
 		

@@ -3,6 +3,8 @@ from streamlit import session_state as ss
 from modules import group, player
 import pandas as pd
 import numpy as np
+import time
+import decimal
 import matplotlib.pyplot as plt
 import os
 from os import path
@@ -297,9 +299,20 @@ def feedback():
 		st.markdown("---")
 
 def submit_report_info(orders_df, group_state):
+	group_state = group.load(ss.group_state.get('group_key'))
 	if not os.path.exists(ss.filepath+'report/'):
 		os.makedirs(ss.filepath+'report/')
+
+	elapsed_time = decimal.Decimal(time.time() - group_state['start_time'])
+	elapsed_minutes = decimal.Decimal(elapsed_time / 60)
+	decimal.getcontext().rounding = decimal.ROUND_DOWN
+	elapsed_minutes = round(elapsed_minutes, 0)				
+	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
+	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
+
 	with open(ss.filepath+'report/'+ 'IndustrialEngineer' + '.txt', 'w') as f:
+		f.write(ss.group + ': Industrial Engineer: '+ ss.name +'\n')
+		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n")
 		f.write(orders_df.to_string(index=False))
 	group_state['roles_reported'][2] = True
 	group.save_group_state(group_state)
