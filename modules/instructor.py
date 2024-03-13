@@ -161,8 +161,8 @@ def display_groups():
 				else:
 					st.write(role+':  unfilled')
 			try:
-				format.Button_Format()
 				with open(group_state.get('group_key') + '_report.zip', 'rb') as f:
+					format.Button_Format()
   					st.download_button('Download Group Report', f, file_name=group_state.get('group_key') + '_report.zip')
 			except FileNotFoundError:
 					pass
