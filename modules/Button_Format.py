@@ -41,3 +41,16 @@ def Button_Format():
 	}
 	</style>
 	""", unsafe_allow_html=True)
+
+def downlad_format():
+	st.markdown("""
+	<style>
+	[data-testid="stDownloadButton"] {
+    	border: 5px solid #5f9ea0;
+    	color: white;
+    	font-size: 20px;
+    	border-radius: 10px 10px 10px 10px;
+		background-color: #5f9ea0;
+	}
+	</style>
+	""", unsafe_allow_html=True)
