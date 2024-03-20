@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit import session_state as ss
-from modules import group, player
+from modules import group, player, rejoin, game
 import numpy as np
 import pandas as pd
 import time
@@ -390,10 +390,32 @@ def submit_report_info(vendor_df, group_state):
 	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 
+	try:
+		with open(ss.filepath+'fb_pum_d.txt', 'r') as f:
+			fb_pum_d = f.read()
+
+		with open(ss.filepath+'fb_pum_i.txt', 'r') as f:
+			fb_pum_i = f.read()
+		
+		with open(ss.filepath+'fb_pum_pm.txt', 'r') as f:
+			fb_pum_pm = f.read()
+
+		with open(ss.filepath+'fb_pum_m.txt', 'r') as f:
+			fb_pum_m = f.read()
+	
+	except FileNotFoundError:
+		pass
+	except:
+		print('An error occurred')
+
 	with open(ss.filepath+'report/'+ 'PurchasingManager' + '.txt', 'w') as f:
 		f.write(ss.group + ': Purchasing Manager: '+ ss.name +'\n')
 		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n")
 		f.write(vendor_df.to_string(index=False))
+		f.write('\n' + '\n' + 'Feedback to the Design Engineer: '+ fb_pum_d+ '\n' +
+                'Feedback to the Indistrial Engineer: '+ fb_pum_i + '\n' +
+                'Feedback to the Project Manager: '+ fb_pum_pm + '\n' +
+                'Feedback to the Mechanical Manager: '+ fb_pum_m)
 	group_state['roles_reported'][3] = True
 	group.save_group_state(group_state)
 	print("Purchasing Manager submitted the report successfully")

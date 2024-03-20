@@ -43,14 +43,31 @@ def Button_Format():
 	""", unsafe_allow_html=True)
 
 def downlad_format():
-	st.markdown("""
+	custom_css = """
 	<style>
-	[data-testid="stDownloadButton"] {
-    	border: 5px solid #5f9ea0;
-    	color: white;
-    	font-size: 20px;
-    	border-radius: 10px 10px 10px 10px;
+	.download-button {{
+		display: inline-block;
+		padding: 5px 20px;
 		background-color: #5f9ea0;
-	}
+		color: #5f9ea0;
+		width: 300px;
+		height: 35px;
+		text-align: center;
+		text-decoration: none;
+		font-size: 16px; 
+		border-radius: 8px;
+	}}
+	.download-button:hover {{
+		border-color: rgb(246, 51, 102);
+		color: rgb(246, 51, 102);
+	}}
+	.download-button:active {{
+		box-shadow: none;
+		background-color: rgb(246, 51, 102);
+		color: #5f9ea0;
+	}}
 	</style>
-	""", unsafe_allow_html=True)
+	"""
+
+	# Add the custom CSS to your Streamlit app
+	st.markdown(custom_css, unsafe_allow_html=True)

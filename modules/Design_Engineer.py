@@ -5,12 +5,13 @@ import time
 import decimal
 import matplotlib.pyplot as plt
 from streamlit import session_state as ss
-from modules import group, player, game
+from modules import group, player, game, rejoin
 from PIL import Image, ImageDraw, ImageFont
 import os
 from os import path
 
 def render():
+
 	st.set_option('deprecation.showPyplotGlobalUse', False)
 	st.title('Design Engineer')
 	
@@ -247,7 +248,7 @@ def render():
 def feedback():
 	# writing
 	st.header("Feedback **:red[TO]**")
-	
+
 	text = ""
 	if path.isfile(ss.filepath+'fb_d_m.txt'):
 		with open(ss.filepath+'fb_d_m.txt', 'r') as f:
@@ -270,6 +271,7 @@ def feedback():
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_d_m.txt'):
 				os.remove(ss.filepath+'fb_d_m.txt')
+			fb_d_m = ""
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 	
 	text = ""
@@ -395,14 +397,51 @@ def submit_report_info(fig, group_state):
 	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 
+	try:
+		with open(ss.filepath+'fb_d_m.txt', 'r') as f:
+			fb_d_m = f.read()
+	except FileNotFoundError:
+		pass
+	except:
+		print('An error occurred')
+
+	try:
+		with open(ss.filepath+'fb_d_i.txt', 'r') as f:
+			fb_d_i = f.read()
+	except FileNotFoundError:
+		pass
+	except:
+		print('An error occurred')
+	
+	try:
+		with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
+			fb_d_pm = f.read()
+	except FileNotFoundError:
+		pass
+	except:
+		print('An error occurred')
+
+	try:
+		with open(ss.filepath+'fb_d_pum.txt', 'r') as f:
+			fb_d_pum = f.read()
+	except FileNotFoundError:
+		pass
+	except:
+		print('An error occurred')
+
 	with open(ss.filepath+'report/'+ 'DesignEngineer' + '.txt', 'w') as f:
 		f.write(ss.group + ': Design Engineer: '+ ss.name + '\n')
 		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
 				'Wheel Base: ' + str(ss.design_parameters[0]) + '\n' +
 				'Total Mass: ' + str(ss.design_parameters[1]) + '\n' +
 				'Front Wheel Radius: '+ str(ss.design_parameters[2]) + '\n' +
-				'Rear Wheel Radius: '+ str(ss.design_parameters[3]))
+				'Rear Wheel Radius: '+ str(ss.design_parameters[3]) + '\n' + '\n' +
+				'Feedback to the Mechanical Engineer: '+ fb_d_m+ '\n' +
+                'Feedback to the Indistrial Engineer: '+ fb_d_i + '\n' +
+                'Feedback to the Project Manager: '+ fb_d_pm + '\n' +
+                'Feedback to the Purchasing Manager: '+ fb_d_pum)
 	fig.savefig(ss.filepath+'report/' + 'DesignEngineer' + '_graph.png')
 	group_state['roles_reported'][0] = True
 	group.save_group_state(group_state)
 	print("Design Enginner submitted the report successfully")
+

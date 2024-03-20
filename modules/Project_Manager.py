@@ -19,8 +19,9 @@ class ReportState(Enum):
 	INVALID = 5
 
 def render():	
+
 	st.title('Project Manager')
-	
+
 	st.write("Welcome to the Project Manager Page!")
 	
 	st.markdown(
@@ -315,3 +316,4 @@ def check_report():
 					   +"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
 			make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')
 		advance_state()
+	
