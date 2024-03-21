@@ -405,17 +405,18 @@ def submit_report_info(vendor_df, group_state):
 	
 	except FileNotFoundError:
 		pass
-	except:
-		print('An error occurred')
+		#print(f"One or more feedback files not found.")
+	except Exception as e:
+		print(f"An error occurred: {e}")
 
 	with open(ss.filepath+'report/'+ 'PurchasingManager' + '.txt', 'w') as f:
 		f.write(ss.group + ': Purchasing Manager: '+ ss.name +'\n')
 		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n")
 		f.write(vendor_df.to_string(index=False))
 		f.write('\n' + '\n' + 'Feedback to the Design Engineer: '+ fb_pum_d+ '\n' +
-                'Feedback to the Indistrial Engineer: '+ fb_pum_i + '\n' +
-                'Feedback to the Project Manager: '+ fb_pum_pm + '\n' +
-                'Feedback to the Mechanical Manager: '+ fb_pum_m)
+				'Feedback to the Indistrial Engineer: '+ fb_pum_i + '\n' +
+				'Feedback to the Project Manager: '+ fb_pum_pm + '\n' +
+				'Feedback to the Mechanical Manager: '+ fb_pum_m)
 	group_state['roles_reported'][3] = True
 	group.save_group_state(group_state)
 	print("Purchasing Manager submitted the report successfully")

@@ -400,34 +400,17 @@ def submit_report_info(fig, group_state):
 	try:
 		with open(ss.filepath+'fb_d_m.txt', 'r') as f:
 			fb_d_m = f.read()
-	except FileNotFoundError:
-		pass
-	except:
-		print('An error occurred')
-
-	try:
 		with open(ss.filepath+'fb_d_i.txt', 'r') as f:
 			fb_d_i = f.read()
-	except FileNotFoundError:
-		pass
-	except:
-		print('An error occurred')
-	
-	try:
 		with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
 			fb_d_pm = f.read()
-	except FileNotFoundError:
-		pass
-	except:
-		print('An error occurred')
-
-	try:
 		with open(ss.filepath+'fb_d_pum.txt', 'r') as f:
 			fb_d_pum = f.read()
 	except FileNotFoundError:
 		pass
-	except:
-		print('An error occurred')
+		#print(f"One or more feedback files not found.")
+	except Exception as e:
+		print(f"An error occurred: {e}")
 
 	with open(ss.filepath+'report/'+ 'DesignEngineer' + '.txt', 'w') as f:
 		f.write(ss.group + ': Design Engineer: '+ ss.name + '\n')
@@ -438,7 +421,7 @@ def submit_report_info(fig, group_state):
 				'Rear Wheel Radius: '+ str(ss.design_parameters[3]) + '\n' + '\n' +
 				'Feedback to the Mechanical Engineer: '+ fb_d_m+ '\n' +
                 'Feedback to the Indistrial Engineer: '+ fb_d_i + '\n' +
-                'Feedback to the Project Manager: '+ fb_d_pm + '\n' +
+                'Feedback to the Project Manager: '+ ('N/A' if fb_d_pm is None else fb_d_pm) + '\n' +
                 'Feedback to the Purchasing Manager: '+ fb_d_pum)
 	fig.savefig(ss.filepath+'report/' + 'DesignEngineer' + '_graph.png')
 	group_state['roles_reported'][0] = True
