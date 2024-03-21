@@ -9,61 +9,6 @@ def render():
 	if 'rejoin_selected' not in ss:
 		ss['rejoin_selected'] = False
 	if 'rejoin_assigned' not in ss:
-		ss['rejoin_assigned'] = False # Do I need this?
-	if 'rejoin_view' not in ss:
-		ss['rejoin_view'] = False
-	if 'rejoin_group' not in ss:
-		ss['rejoin_group'] = None
-	if 'rejoin_name' not in ss:
-		ss['rejoin_name'] = None
-	if 'rejoin_role' not in ss:
-		ss['rejoin_role'] = None
-	if 'rejoin_player' not in ss:
-		ss['rejoin_player'] = None
-
-	game_state = game.load()
-	groups = game_state['groups']
-	num_groups = len(groups)
-
-	rejoin_codes = []
-
-	st.title("Select a user in one of the groups below in order to generate a rejoin code for that user. Click the 'View' button below to see all active rejoin codes.")
-	st.write("Once a user has rejoined their session, their rejoin code will dissapear. You may generate a rejoin code as many times as you need to for a user.")
-	st.write("NOTE:  All rejoin codes contain ONLY lowercase letters and integers 0 - 9.")
-	
-	st.button("View/Hide Active Rejoin Codes", on_click=switch_rejoin_view)
-	if ss.rejoin_view:
-		if len(game_state['rejoin_codes']) == 0:
-			st.write("There are no users waiting to rejoin their session.")
-		else:
-			for dict in game_state['rejoin_codes']:
-				st.write(f"The rejoin code for {dict['name']} in group {dict['group']} is  {dict['code']}")
-				
-	if ss.rejoin_selected:
-		rejoin_check()
-	cols = st.columns(num_groups)
-	for i in range(num_groups):
-		group_state = group.load(groups[i])
-		with cols[i]:
-			st.title(group_state['group_key'])
-			if group_state['player_count'] == 0:
-				st.write("No users have joined this group.")
-			for j in range(group_state['player_count']):
-				num = j+1
-				label = 'User '+str(num)
-				pname = 'p'+str(num)+'_name'
-				prole = 'p'+str(num)+'_role'
-				name = group_state[pname]
-				role = group_state[prole]
-				st.button(label, on_click=rejoin_begin, args=(groups[i], name, role, num))
-				st.write(f"{label} name: {group_state[pname]}") 
-				st.write(f"{label} role: {group_state[prole]}")
-
-def player_render():
-
-	if 'rejoin_selected' not in ss:
-		ss['rejoin_selected'] = False
-	if 'rejoin_assigned' not in ss:
 		ss['rejoin_assigned'] = False  # Do I need this?
 	if 'rejoin_view' not in ss:
 		ss['rejoin_view'] = False
@@ -80,20 +25,6 @@ def player_render():
 	groups = game_state['groups']
 	num_groups = len(groups)
 
-	st.title("Your Rejoin Code is: ")
-	st.write("If you get disconnected from your session for any reason, use the code below to reconnect to your dashboard.")
-	st.write("Please write your rejoin code down")
-	st.write("NOTE:  The rejoin code contains ONLY lowercase letters and integers 0 - 9.")
-
-	st.button("View/Hide Active Rejoin Codes", on_click=switch_rejoin_view)
-	if ss.rejoin_view:
-		if len(game_state['rejoin_codes']) == 0:
-			st.write("")
-		else:
-			for dict in game_state['rejoin_codes']:
-				if dict['player'] == ss.rejoin_player:
-					st.write(f"Your Rejoin code is {dict['code']}")
-
 	if ss.rejoin_selected:
 		rejoin_check()
 
@@ -101,7 +32,6 @@ def player_render():
 	for i in range(num_groups):
 		group_state = group.load(groups[i])
 		with cols[i]:
-			st.title(group_state['group_key'])
 			if group_state['player_count'] == 0:
 				st.write("No users have joined this group.")
 			for j in range(group_state['player_count']):
@@ -112,9 +42,23 @@ def player_render():
 				name = group_state[pname]
 				role = group_state[prole]
 				if name == ss.name and role == ss.role:
-					st.button('Rejoin Code', on_click=rejoin_begin, args=(groups[i], name, role, num))
-					st.write(f"{label} name: {group_state[pname]}") 
-					st.write(f"{label} role: {group_state[prole]}")
+					col1, col2 = st.columns(2)
+					with col1:
+						st.button('Generate Code', on_click=lambda: (rejoin_begin(groups[i], name, role, num), switch_rejoin_view()))
+					with col2:
+						st.button("View Code", on_click=switch_rejoin_view)
+	
+	if ss.rejoin_view:
+		if len(game_state['rejoin_codes']) == 0:
+			st.write("")
+		else:
+			for dict in game_state['rejoin_codes']:
+				if dict['player'] == ss.rejoin_player:
+					st.title(f"Your Rejoin code is {dict['code']}")
+
+	st.write("If you get disconnected from your session for any reason, use the rejoin code to reconnect to your dashboard.")
+	st.write("Please generate a code and then click on 'View Code' to write it down")
+	st.write("NOTE:  The rejoin code contains ONLY lowercase letters and integers 0 - 9.")
 
 def rejoin_begin(group_key, name, role, num):
 	ss.rejoin_group = group_key
@@ -130,15 +74,11 @@ def rejoin_check():
 	for dict in rejoin_dicts:
 		if ss.rejoin_group == dict['group'] and ss.rejoin_name == dict['name'] and ss.rejoin_role == dict['role']:
 			code_exists = True
+		
 	if code_exists:
-		st.write(f"You have already generated a rejoin code for this user. Click 'View Rejoin codes' to view the code.")
+		st.write("")
 	else:
-		st.write(f"Generate Rejoin Code for {ss.rejoin_name} playing as {ss.rejoin_role} in {ss.rejoin_group} ?")
-		col1, col2 = st.columns(2)
-		with col1:
-			st.button("YES", on_click=code_assign)
-		with col2:
-			st.button("NO", on_click=rejoin_select_switch)
+		code_assign()
 
 def code_assign():
 
@@ -167,12 +107,6 @@ def code_assign():
 
 	ss.rejoin_selected = False
 	ss.rejoin_assigned = True
-
-def rejoin_select_switch():
-	if ss.rejoin_selected:
-		ss.rejoin_selected = False
-	else:
-		ss.rejoin_selected = True
 
 def get_code():
 

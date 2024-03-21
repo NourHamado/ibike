@@ -5,7 +5,7 @@ from os import path
 import os
 import time
 from streamlit import session_state as ss
-from modules import order, group, player, game, rejoin
+from modules import order, group, player, game, player_rejoin
 from enum import Enum
 from shutil import make_archive
 import decimal
@@ -18,92 +18,99 @@ class ReportState(Enum):
 	FINISHED = 4
 	INVALID = 5
 
-def render():	
+def render():
 
-	st.title('Project Manager')
+	if 'code_written' not in ss:
+		ss['code_written'] = False
 
-	st.write("Welcome to the Project Manager Page!")
-	
-	st.markdown(
-			"""
-			Your role is to generate customer orders, monitor the progress of your team members, delegate tasks, and provide constructive feedback.
-			""")
-	if 'order_requested' not in ss:
-		ss['orders_requested'] = False
-	if 'display_orders' not in ss:
-		ss['display_orders'] = False
-	if 'orders_full' not in ss:
-		ss['orders_full'] = False
-
-	st.markdown("Specify the number of orders you would like to place using the slider, and then click \"Generate Customer Orders\".")
-
-	col1, col2 = st.columns([1, 2])
-
-	with col1:
-		
-		order_request = st.button('Generate Customer Orders',on_click=create_orders)
-		
-		if ss.orders_requested:
-			st.write(f"{ss.orders_created} orders have been recieved. There are {len(ss.group_state['orders'])} ongoing orders. Click on 'View/Hide Orders' to see order details.")
-			
-		if ss.orders_full:
-			st.write(f"WARNING: That number of incoming orders will exceed the current limit of {ss.order_limit} ongoing customer orders. Select a smaller number of orders.")
-			
-	with col2:
-		
-		num_requested = st.slider('Select the number of orders you would like to generate:', key="num_orders", min_value=1, max_value=ss.order_limit, value=1)
-
-	if 'report_status' not in ss:
-			ss.report_status = ReportState.INACTIVE
-
-	#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
-	if(ss.report_status == ReportState.GENERATING):
-		check_report()
-	
-	st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report.")
-	#report button
-	if(ss.report_status == ReportState.INACTIVE):
-		st.button('Create Report', on_click=advance_state)
-	elif(ss.report_status == ReportState.CONFIRMING):
-		st.button('Cancel Report', on_click=reset_state)
-	elif(ss.report_status == ReportState.GENERATING):
-		st.button('Refresh') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
-	elif(ss.report_status == ReportState.FINISHED):
-		st.button('Close Report', on_click=advance_state)
+	if not ss.code_written:
+		display_pr_m_code()
 	else:
-		print('State Error - Button') #this should never be reached unless an error occurs
+		
+		st.title('Project Manager')
 
-	#revealed items that appear once the button is clicked for the first time
-	if(ss.report_status != ReportState.INACTIVE):
-		if(ss.report_status == ReportState.CONFIRMING):
-			st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
-			st.button('Confirm', on_click=generate_report) #this function call will advance the report state
+		st.write("Welcome to the Project Manager Page!")
+		
+		st.markdown(
+				"""
+				Your role is to generate customer orders, monitor the progress of your team members, delegate tasks, and provide constructive feedback.
+				""")
+		if 'order_requested' not in ss:
+			ss['orders_requested'] = False
+		if 'display_orders' not in ss:
+			ss['display_orders'] = False
+		if 'orders_full' not in ss:
+			ss['orders_full'] = False
+
+		st.markdown("Specify the number of orders you would like to place using the slider, and then click \"Generate Customer Orders\".")
+
+		col1, col2 = st.columns([1, 2])
+
+		with col1:
+			
+			order_request = st.button('Generate Customer Orders',on_click=create_orders)
+			
+			if ss.orders_requested:
+				st.write(f"{ss.orders_created} orders have been recieved. There are {len(ss.group_state['orders'])} ongoing orders. Click on 'View/Hide Orders' to see order details.")
+				
+			if ss.orders_full:
+				st.write(f"WARNING: That number of incoming orders will exceed the current limit of {ss.order_limit} ongoing customer orders. Select a smaller number of orders.")
+				
+		with col2:
+			
+			num_requested = st.slider('Select the number of orders you would like to generate:', key="num_orders", min_value=1, max_value=ss.order_limit, value=1)
+
+		if 'report_status' not in ss:
+				ss.report_status = ReportState.INACTIVE
+
+		#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
+		if(ss.report_status == ReportState.GENERATING):
+			check_report()
+		
+		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report.")
+		#report button
+		if(ss.report_status == ReportState.INACTIVE):
+			st.button('Create Report', on_click=advance_state)
+		elif(ss.report_status == ReportState.CONFIRMING):
+			st.button('Cancel Report', on_click=reset_state)
 		elif(ss.report_status == ReportState.GENERATING):
-			st.write(f"Input confirmed, generating...")			
+			st.button('Refresh') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
 		elif(ss.report_status == ReportState.FINISHED):
-			st.write(f"Report generated successfully. You may now close this report.")
+			st.button('Close Report', on_click=advance_state)
 		else:
-			print('State Error - Revealed Area') #this also should never be reached unless an error occurs
-	
-	if path.isfile(ss.filepath+'parts_selction.csv'):
-		st.header(":blue[Mechanical Engineer]")
-		st.markdown("Parts, materials, and manufacturing processes selected by the :blue[Mechanical Engineer]")
-		selection_df = pd.read_csv(ss.filepath+'parts_selction.csv')
-		selection_df.index = list(range(1, len(selection_df)+1))
-		st.dataframe(selection_df, width=3000)
-	
-	if path.isfile(ss.filepath+'parts_material_process_justification.csv'):
-		st.markdown("Justifications of the :blue[Mechanical Engineer]")
-		just_df = pd.read_csv(ss.filepath+'parts_material_process_justification.csv')
-		just_df.index = list(range(1, len(just_df)+1))
-		st.dataframe(just_df, width=3000)
-	
+			print('State Error - Button') #this should never be reached unless an error occurs
 
-	player.display_current_orders()
+		#revealed items that appear once the button is clicked for the first time
+		if(ss.report_status != ReportState.INACTIVE):
+			if(ss.report_status == ReportState.CONFIRMING):
+				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
+				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
+			elif(ss.report_status == ReportState.GENERATING):
+				st.write(f"Input confirmed, generating...")			
+			elif(ss.report_status == ReportState.FINISHED):
+				st.write(f"Report generated successfully. You may now close this report.")
+			else:
+				print('State Error - Revealed Area') #this also should never be reached unless an error occurs
+		
+		if path.isfile(ss.filepath+'parts_selction.csv'):
+			st.header(":blue[Mechanical Engineer]")
+			st.markdown("Parts, materials, and manufacturing processes selected by the :blue[Mechanical Engineer]")
+			selection_df = pd.read_csv(ss.filepath+'parts_selction.csv')
+			selection_df.index = list(range(1, len(selection_df)+1))
+			st.dataframe(selection_df, width=3000)
+		
+		if path.isfile(ss.filepath+'parts_material_process_justification.csv'):
+			st.markdown("Justifications of the :blue[Mechanical Engineer]")
+			just_df = pd.read_csv(ss.filepath+'parts_material_process_justification.csv')
+			just_df.index = list(range(1, len(just_df)+1))
+			st.dataframe(just_df, width=3000)
+		
 
-	st.markdown('---')
+		player.display_current_orders()
 
-	ss.date = st.date_input("Choose the order complation data", value=None)
+		st.markdown('---')
+
+		ss.date = st.date_input("Choose the order complation data", value=None)
 	
 def feedback():
 	st.header("Feedback **:red[TO]**")
@@ -317,3 +324,12 @@ def check_report():
 			make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')
 		advance_state()
 	
+def display_pr_m_code():	
+	player_rejoin.render()
+	st.button("CONTINUE", on_click=code_written_switch)
+
+def code_written_switch():
+	if ss.code_written:
+		ss.code_written = False
+	else:
+		ss.code_written = True

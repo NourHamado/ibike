@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit import session_state as ss
-from modules import game, group, rejoin
+from modules import game, group
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -21,15 +21,13 @@ def render():
 		ss.group_state = group.load(ss.group)
 		if ss.group_state['status'] != 'completed':
 			format.Tab_Format()
-			tab1, tab2, tab3, tab4 = st.tabs(["Your Page","Feedback Page","Group Status", "Rejoin Code"])
+			tab1, tab2, tab3= st.tabs(["Your Page","Feedback Page","Group Status"])
 			with tab1:
 				display_role_page()
 			with tab2:
 				display_feedback_page()
 			with tab3:
 				display_group_info()
-			with tab4:
-				display_rejoin_page()
 		else:
 			display_game_complete()
 
@@ -157,9 +155,6 @@ def display_group_info():
 def display_game_complete():
 	st.title("The Simulation is Over")
 	st.write("Thank you for playing!")
-
-def display_rejoin_page():
-	rejoin.player_render()
 
 # this function first checks availability and then assigns a user to a group if it is not already full.
 # if a user is the 5th member of a group, that group will be removed from the available, displayed groups for all other users
