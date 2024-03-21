@@ -62,14 +62,14 @@ def display_current_orders():
 					st.radio('Orders Ready for your input:  ', order_keys, key='order_choice')
 				else:
 					st.markdown(
-    					"""
+						"""
 					<style>
 					span[data-baseweb="tag"] {
 						background-color: #243b3b !important;
 					}
 					</style>
 					""",
-    					unsafe_allow_html=True,
+						unsafe_allow_html=True,
 					)
 					selected_order = st.multiselect('Orders Ready for your input:  ', order_keys)
 			with col2:

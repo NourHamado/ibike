@@ -34,7 +34,6 @@ def reset_check():
 def display_rejoin():	
 	st.button("BACK", on_click=rejoin_switch)
 	rejoin.render()
-	
 
 def rejoin_switch():
 	if ss.rejoin_requested:
