@@ -39,7 +39,7 @@ def init(group_key):
 				   'roles_reported' : list((True, True, True, True))
 		      }
 	
-	os.makedirs(dirpath)
+	os.makedirs(dirpath, exist_ok=True)
 	with open(filepath,'w') as file:
 		json.dump(group_state,file)
 	return group_state

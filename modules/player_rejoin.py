@@ -44,9 +44,9 @@ def render():
 				if name == ss.name and role == ss.role:
 					col1, col2 = st.columns(2)
 					with col1:
-						st.button('Generate Code', on_click=lambda: (rejoin_begin(groups[i], name, role, num), switch_rejoin_view()))
-					with col2:
-						st.button("View Code", on_click=switch_rejoin_view)
+						#st.button('Generate Code', on_click=lambda: (rejoin_begin(groups[i], name, role, num), switch_rejoin_view()))
+						st.button('Generate Code', on_click=rejoin_begin, args=(groups[i], name, role, num))
+						switch_rejoin_view()
 	
 	if ss.rejoin_view:
 		if len(game_state['rejoin_codes']) == 0:
@@ -57,7 +57,7 @@ def render():
 					st.title(f"Your Rejoin code is {dict['code']}")
 
 	st.write("If you get disconnected from your session for any reason, use the rejoin code to reconnect to your dashboard.")
-	st.write("Please generate a code and then click on 'View Code' to write it down")
+	st.write("Double click 'Generate Code' to get the code and view it. Please, write the code down")
 	st.write("NOTE:  The rejoin code contains ONLY lowercase letters and integers 0 - 9.")
 
 def rejoin_begin(group_key, name, role, num):

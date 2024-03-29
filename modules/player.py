@@ -310,8 +310,8 @@ def init():
 		print("Survey State: " + str(ss.survey_active));
 		if(not ss.survey_active):
 			st.button('I would like to take the survey', on_click=form.toggle_survey_state)
-
-			if(ss.init_selection[0] == ''):                
+			if(ss.init_selection[0] == ''):   
+				st.button("Back", on_click=name_switch)            
 				display_group_buttons()
 			elif(ss.init_selection[1] == ''):
 				display_role_buttons(ss.init_selection[0])
@@ -321,6 +321,12 @@ def init():
 		else:
 			survey.main_form()
 
+def name_switch():
+	if ss.name:
+		ss.name = False
+	else:
+		ss.name = True
+		
 def switch_order_view():
 	if ss.order_view == True:
 		ss.order_view = False

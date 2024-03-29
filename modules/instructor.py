@@ -11,7 +11,8 @@ format.Button_Format()
 
 def game_reset():
 	dirpath = 'files/data'
-	shutil.rmtree(dirpath)
+	if os.path.exists(dirpath):
+		shutil.rmtree(dirpath)
 	os.mkdir(dirpath)
 	for key in ss.keys():
 		del ss[key]
@@ -55,11 +56,18 @@ def render():
 		ss['code_written'] = False
 
 	if not ss.setup_complete:
+		if not ss.name:
+			print("No Back Button")
+		elif not ss.game_state:
+			st.button("BACK", on_click=name_switch)
+		elif not ss.setup_complete:
+			st.button("BACK", on_click=group_switch)
 		st.title('iBIKE Simulation Setup')
 		st.markdown('On this page, you will specify the number of student groups participating in the simulation. Each group must have 5 (and no more than 5) students. You will be able to monitor the groups\' progress, and at the end of the session, download each group\'s data.')
 		init()
 
 	elif not ss.code_written:
+		st.button("BACK", on_click=complete_switch)
 		display_teacher_code()
 
 	elif ss.reset_requested:
@@ -69,6 +77,7 @@ def render():
 		display_rejoin()
 
 	else:
+		st.button("Back", on_click=code_written_switch)
 		col1, col2 = st.columns(2)
 		
 		with col1:
@@ -82,7 +91,6 @@ def render():
 			while True:
 				time.sleep(5)
 				st.experimental_rerun()
-
 # Callback function to generate group_state and game_state files to manage the game
 #	and to flag the game setup as complete.
 def game_state_assign():
@@ -93,6 +101,7 @@ def game_state_assign():
 	else:
 		game_state = game.init(ss.name, group_num)
 		ss.game_state = game_state
+
 
 def init():
 	# function for instructor setup. Includes setting the instructor name and number of groups.
@@ -105,7 +114,8 @@ def init():
 				st.experimental_rerun() #causes the submit button to only need to be pressed once
 
 	elif not ss.game_state:
-		#group_num = st.text_input('How many student groups do you have?', key='group_num_input', on_change=game_state_assign)
+	#group_num = st.text_input('How many student groups do you have?', key='group_num_input', on_change=game_state_assign)
+		#st.button("BACK", on_click=name_switch)
 		with st.form("name_form"):
 			group_query = st.text_input("How many student groups do you have?")
 			group_submission = st.form_submit_button("Submit")
@@ -118,12 +128,31 @@ def init():
 					game_state = game.init(ss.name, group_num)
 					ss.game_state = game_state
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
-
+		
 	elif not ss.setup_complete:
+		#st.button("BACK", on_click=group_switch)
 		st.write("Please specify the limit of concurrent, unfulfilled customer orders that you would like to allow, along with the total number of fulfilled orders required to complete the simulation.\nWhen you are done, click \'Complete Setup\' below.")
 		st.slider("Concurrent Unfulfilled Order Limit",min_value=0,max_value=100,value=25,step=5,key='order_limit_input')
 		st.slider("Fulfilled Orders Required to Complete the Simulation",min_value=0,max_value=500,value=100,step=10,key='completed_limit_input')
 		st.button("Complete Setup", on_click=complete_game_setup)
+	
+def name_switch():
+	if ss.name:
+		ss.name = False
+	else:
+		ss.name = True
+
+def group_switch():
+	if ss.game_state:
+		ss.game_state = False
+	else:
+		ss.game_state = True
+
+def complete_switch():
+	if ss.setup_complete:
+		ss.setup_complete = False
+	else:
+		ss.setup_complete = True
 
 def complete_game_setup():
 	ss.order_limit = ss.order_limit_input

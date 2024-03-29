@@ -5,7 +5,7 @@ import time
 import decimal
 import matplotlib.pyplot as plt
 from streamlit import session_state as ss
-from modules import group, player, game, player_rejoin
+from modules import group, player, game, player_rejoin, Button_Format as format
 from PIL import Image, ImageDraw, ImageFont
 import os
 from os import path
@@ -46,6 +46,14 @@ def render():
 		player.display_current_orders()
 
 		st.markdown('---')
+
+		with open("files/Design_Engineer_Guide.pdf", "rb") as f:
+			st.download_button( 
+				label="Design Engineer Guide", 
+				data=f.read(), 
+				file_name="Design_Engineer_Guide.pdf", 
+				mime="application/octet-stream"
+			)
 
 		col1, col2 = st.columns([1, 2])
 
@@ -272,6 +280,7 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_d_m != ""):
+			st.write("Sent")
 			with open(ss.filepath+"fb_d_m.txt", "w") as f:
 				f.write(fb_d_m)
 			st.experimental_rerun() #causes the submit button to only need to be pressed once

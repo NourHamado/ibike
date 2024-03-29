@@ -1,5 +1,6 @@
 import json
 from modules import group, rejoin
+import os
 
 def load():
 	filepath = 'files/data/game_state.json'
@@ -44,4 +45,5 @@ def init(name,group_num):
 	
 	with open(filepath,'w') as file:
 		json.dump(game_state, file)
+
 	return game_state

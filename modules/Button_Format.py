@@ -9,11 +9,12 @@ def Tab_Format():
 			   		font-weight: bold;
 				}
 				.stTabs [data-baseweb="tab-list"] {
-					gap: 15px;
+					gap: 20px;
 				}
 
 				.stTabs [data-baseweb="tab"] {
 					height: 45px;
+			 		width: 142px;
 					white-space: pre-wrap;
 					background-color: #F0F2F6;
 			   		border: 1px solid #003040;

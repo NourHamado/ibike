@@ -14,6 +14,7 @@ def render():
 	if not ss.code_written:
 		display_m_e_code()
 	else:
+		st.button("BACK", on_click=display_m_e_code)
 		st.title('Mechanical Engineer')
 		
 		st.write("Welcome to the Mechanical Engineer Page!")
@@ -496,6 +497,7 @@ def feedback():
 		col1, whitespace, col2 = st.columns((100, 400, 129))
 		with col1:
 			feedback_submission = st.form_submit_button("Submit")
+			st.write("Sent")
 		with whitespace:
 			st.write("") #no content, this column is just to properly align the clear feedback button
 		with col2:
