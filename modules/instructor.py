@@ -269,3 +269,4 @@ def code_written_switch():
 		ss.code_written = False
 	else:
 		ss.code_written = True
+		
