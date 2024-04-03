@@ -671,6 +671,7 @@ def submit_report_info(selection_df, justification_df, group_state):
 	group_state['roles_reported'][1] = True
 	group.save_group_state(group_state)
 	print("Mechanical Enginner submitted the report successfully")
+	st.write("Mechanical Enginner submitted the report successfully")
 
 def display_m_e_code():	
 	player_rejoin.render()

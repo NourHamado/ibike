@@ -440,6 +440,7 @@ def submit_report_info(vendor_df, group_state):
 	group_state['roles_reported'][3] = True
 	group.save_group_state(group_state)
 	print("Purchasing Manager submitted the report successfully")
+	st.write("Purchasing Manager submitted the report successfully")
 
 def display_pur_m_code():	
 	player_rejoin.render()

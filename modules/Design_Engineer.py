@@ -474,6 +474,7 @@ def submit_report_info(fig, group_state):
 	group_state['roles_reported'][0] = True
 	group.save_group_state(group_state)
 	print("Design Enginner submitted the report successfully")
+	st.write("Design Enginner submitted the report successfully")
 
 def display_d_e_code():	
 	player_rejoin.render()
