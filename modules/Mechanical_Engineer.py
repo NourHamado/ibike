@@ -14,7 +14,6 @@ def render():
 	if not ss.code_written:
 		display_m_e_code()
 	else:
-		st.button("BACK", on_click=display_m_e_code)
 		st.title('Mechanical Engineer')
 		
 		st.write("Welcome to the Mechanical Engineer Page!")
@@ -497,15 +496,17 @@ def feedback():
 		col1, whitespace, col2 = st.columns((100, 400, 129))
 		with col1:
 			feedback_submission = st.form_submit_button("Submit")
-			st.write("Sent")
 		with whitespace:
 			st.write("") #no content, this column is just to properly align the clear feedback button
 		with col2:
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_m_d != ""):
-			with open(ss.filepath+"fb_m_d.txt", "w") as f:
-				f.write(fb_m_d)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_m_d.txt", "w") as f:
+					f.write(fb_m_d)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_d.txt'):
@@ -528,8 +529,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_m_i != ""):
-			with open(ss.filepath+"fb_m_i.txt", "w") as f:
-				f.write(fb_m_i)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_m_i.txt", "w") as f:
+					f.write(fb_m_i)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_i.txt'):
@@ -552,8 +556,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_m_pm != ""):
-			with open(ss.filepath+"fb_m_pm.txt", "w") as f:
-				f.write(fb_m_pm)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_m_pm.txt", "w") as f:
+					f.write(fb_m_pm)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_pm.txt'):
@@ -576,8 +583,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_m_pum != ""):
-			with open(ss.filepath+"fb_m_pum.txt", "w") as f:
-				f.write(fb_m_pum)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_m_pum.txt", "w") as f:
+					f.write(fb_m_pum)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_pum.txt'):

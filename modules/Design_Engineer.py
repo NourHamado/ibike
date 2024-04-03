@@ -47,13 +47,18 @@ def render():
 
 		st.markdown('---')
 
-		with open("files/Design_Engineer_Guide.pdf", "rb") as f:
-			st.download_button( 
-				label="Design Engineer Guide", 
-				data=f.read(), 
-				file_name="Design_Engineer_Guide.pdf", 
-				mime="application/octet-stream"
-			)
+		with st.expander('Design Engineer Guide'):
+			st.title("Selecting Stable Bike Parameters")
+			st.write("This guide focuses on choosing bike parameters that maximize stability during the initial design phase. We will consider four key parameters:")
+			st.write("1. Wheelbase (m)"+"\n"+"2. Mass of Rear Frame and Rider (kg)"+"\n"+"3. Front Wheel Radius (m)"+"\n"+"4. Rear Wheel Radius (m)"+"\n")
+			st.title("Software-Assisted Design:")
+			st.write("1. Vary Parameters: Adjust the values within the provided ranges for each parameter.")
+			st.write("2. Stability Visualization: The software will display a visual representation of the stability region using two vertical dashed lines.")
+			st.write("3. Maximize Stability: As a design engineer, your goal is to maximize the area within these dashed lines, indicating a wider range of stable bike configurations.")
+			st.title("Iterative Process:")
+			st.write("This initial selection focuses on stability. Later stages will involve incorporating feedback from other departments to refine the design for additional factors beyond stability.")
+			st.title("Remember:")
+			st.write("This is a simplified approach. Real-world design involves a more comprehensive set of parameters and considerations")
 
 		col1, col2 = st.columns([1, 2])
 
@@ -280,10 +285,13 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_d_m != ""):
-			st.write("Sent")
-			with open(ss.filepath+"fb_d_m.txt", "w") as f:
-				f.write(fb_d_m)
-			st.experimental_rerun() #causes the submit button to only need to be pressed once
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_d_m.txt", "w") as f:
+					f.write(fb_d_m)
+				st.success("Feedback sent!", icon="✅")
+			st.experimental_rerun()
+
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_d_m.txt'):
 				os.remove(ss.filepath+'fb_d_m.txt')
@@ -306,8 +314,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_d_i != ""):
-			with open(ss.filepath+"fb_d_i.txt", "w") as f:
-				f.write(fb_d_i)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_d_i.txt", "w") as f:
+					f.write(fb_d_i)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_d_i.txt'):
@@ -330,8 +341,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_d_pm != ""):
-			with open(ss.filepath+"fb_d_pm.txt", "w") as f:
-				f.write(fb_d_pm)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_d_pm.txt", "w") as f:
+					f.write(fb_d_pm)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_d_pm.txt'):
@@ -354,8 +368,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_d_pum != ""):
-			with open(ss.filepath+"fb_d_pum.txt", "w") as f:
-				f.write(fb_d_pum)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_d_pum.txt", "w") as f:
+					f.write(fb_d_pum)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_d_pum.txt'):
@@ -414,8 +431,13 @@ def submit_report_info(fig, group_state):
 	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 
 	try:
+		if not os.path.exists(ss.filepath+'fb_d_m.txt'):
+			open(ss.filepath+'fb_d_m.txt', 'x').close()
 		with open(ss.filepath+'fb_d_m.txt', 'r') as f:
 			fb_d_m = f.read()
+
+		if not os.path.exists(ss.filepath+'fb_d_i.txt'):
+			open(ss.filepath+'fb_d_i.txt', 'x').close()
 		with open(ss.filepath+'fb_d_i.txt', 'r') as f:
 			fb_d_i = f.read()
 
@@ -424,10 +446,14 @@ def submit_report_info(fig, group_state):
 		with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
 				fb_d_pm = f.read()
 		
-		with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
-			fb_d_pm = f.read()
+		#with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
+		#	fb_d_pm = f.read()
+				
+		if not os.path.exists(ss.filepath+'fb_d_pum.txt'):
+			open(ss.filepath+'fb_d_pum.txt', 'x').close()
 		with open(ss.filepath+'fb_d_pum.txt', 'r') as f:
 			fb_d_pum = f.read()
+
 	except FileNotFoundError:
 		pass
 	except Exception as e:

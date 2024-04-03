@@ -307,12 +307,11 @@ def init():
 				st.experimental_rerun() #causes the submit button to only need to be pressed once
 
 	elif not ss.group and not ss.role:
-		st.button("BACK", on_click=name_switch)
 		print("Survey State: " + str(ss.survey_active));
 		if(not ss.survey_active):
 			st.button('I would like to take the survey', on_click=form.toggle_survey_state)
 			if(ss.init_selection[0] == ''):   
-				#st.button("BACK", on_click=name_switch)            
+				st.button("BACK", on_click=name_switch)            
 				display_group_buttons()
 			elif(ss.init_selection[1] == ''):
 				display_role_buttons(ss.init_selection[0])

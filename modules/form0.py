@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import session_state as ss
 
 def form_0():
-	st.button("Back", on_click=toggle_survey_state)
+	st.button("BACK", on_click=toggle_survey_state)
 	st.markdown(
 		"""
 		<p style='font-size: 20px; margin-bottom: 0;'>Do you want to take the survey? If you want to take please proceed.</p>

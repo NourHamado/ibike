@@ -183,8 +183,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pum_d != ""):
-			with open(ss.filepath+"fb_pum_d.txt", "w") as f:
-				f.write(fb_pum_d)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pum_d.txt", "w") as f:
+					f.write(fb_pum_d)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pum_d.txt'):
@@ -207,8 +210,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pum_i != ""):
-			with open(ss.filepath+"fb_pum_i.txt", "w") as f:
-				f.write(fb_pum_i)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pum_i.txt", "w") as f:
+					f.write(fb_pum_i)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pum_i.txt'):
@@ -231,8 +237,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pum_pm != ""):
-			with open(ss.filepath+"fb_pum_pm.txt", "w") as f:
-				f.write(fb_pum_pm)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pum_pm.txt", "w") as f:
+					f.write(fb_pum_pm)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pum_pm.txt'):
@@ -255,8 +264,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pum_m != ""):
-			with open(ss.filepath+"fb_pum_m.txt", "w") as f:
-				f.write(fb_pum_m)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pum_m.txt", "w") as f:
+					f.write(fb_pum_m)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pum_m.txt'):
@@ -397,8 +409,10 @@ def submit_report_info(vendor_df, group_state):
 	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 
-	with open(ss.filepath+'fb_pum_d.txt', 'r') as f:
-		fb_pum_d = f.read()
+	fb_pum_d = ""
+	if path.isfile(ss.filepath+'fb_pum_d.txt'):
+		with open(ss.filepath+'fb_pum_d.txt', 'r') as f:
+			fb_pum_d = f.read()
 
 	fb_pum_i = ""
 	if path.isfile(ss.filepath+'fb_pum_i.txt'):
@@ -410,8 +424,10 @@ def submit_report_info(vendor_df, group_state):
 		with open(ss.filepath+'fb_pum_pm.txt', 'r') as f:
 			fb_pum_pm = f.read()
 
-	with open(ss.filepath+'fb_pum_m.txt', 'r') as f:
-		fb_pum_m = f.read()
+	fb_pum_m = ""
+	if path.isfile(ss.filepath+'fb_pum_m.txt'):
+		with open(ss.filepath+'fb_pum_m.txt', 'r') as f:
+			fb_pum_m = f.read()
 
 	with open(ss.filepath+'report/'+ 'PurchasingManager' + '.txt', 'w') as f:
 		f.write(ss.group + ': Purchasing Manager: '+ ss.name +'\n')

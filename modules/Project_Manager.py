@@ -86,7 +86,7 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f"Input confirmed, generating...")			
+				st.write(f"Input confirmed, ask each player to refresh their orders to generate the report")			
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
@@ -131,8 +131,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pm_m != ""):
-			with open(ss.filepath+"fb_pm_m.txt", "w") as f:
-				f.write(fb_pm_m)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pm_m.txt", "w") as f:
+					f.write(fb_pm_m)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pm_m.txt'):
@@ -162,8 +165,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pm_i != ""):
-			with open(ss.filepath+"fb_pm_i.txt", "w") as f:
-				f.write(fb_pm_i)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pm_i.txt", "w") as f:
+					f.write(fb_pm_i)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pm_i.txt'):
@@ -186,8 +192,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pm_pum != ""):
-			with open(ss.filepath+"fb_pm_pum.txt", "w") as f:
-				f.write(fb_pm_pum)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pm_pum.txt", "w") as f:
+					f.write(fb_pm_pum)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pm_pum.txt'):
@@ -210,8 +219,11 @@ def feedback():
 			clear_submission = st.form_submit_button("Clear Feedback")
 		
 		if (feedback_submission and fb_pm_d != ""):
-			with open(ss.filepath+"fb_pm_d.txt", "w") as f:
-				f.write(fb_pm_d)
+			with st.spinner("Submitting feedback..."):
+				time.sleep(1)
+				with open(ss.filepath+"fb_pm_d.txt", "w") as f:
+					f.write(fb_pm_d)
+				st.success("Feedback sent!", icon="✅")
 			st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_pm_d.txt'):
