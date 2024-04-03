@@ -639,23 +639,26 @@ def submit_report_info(selection_df, justification_df, group_state):
 	decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 	elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 
-	try:
+	fb_m_d = ""
+	if path.isfile(ss.filepath+'fb_m_d.txt'):
 		with open(ss.filepath+'fb_m_d.txt', 'r') as f:
 			fb_m_d = f.read()
 
+	fb_m_i = ""
+	if path.isfile(ss.filepath+'fb_m_i.txt'):
 		with open(ss.filepath+'fb_m_i.txt', 'r') as f:
 			fb_m_i = f.read()
 		
+	fb_m_pm = ""
+	if path.isfile(ss.filepath+'fb_m_pm.txt'):
 		with open(ss.filepath+'fb_m_pm.txt', 'r') as f:
 			fb_m_pm = f.read()
 
+	fb_m_pum = ""
+	if path.isfile(ss.filepath+'fb_m_pum.txt'):
 		with open(ss.filepath+'fb_m_pum.txt', 'r') as f:
 			fb_m_pum = f.read()
 			
-	except FileNotFoundError:
-		pass
-	except:
-		print('An error occurred')
 
 	with open(ss.filepath+'report/'+ 'MechanicalEngineer' + '.txt', 'w') as f:
 		f.write(ss.group + ': Mechanical Engineer: '+ ss.name +'\n')
