@@ -361,7 +361,6 @@ def submit_report_info(orders_df, group_state):
 	group_state['roles_reported'][2] = True
 	group.save_group_state(group_state)
 	print("Industrial Engineer submitted the report successfully")
-	st.write("Industrial Engineer submitted the report successfully")
 
 def display_i_e_code():	
 	player_rejoin.render()
