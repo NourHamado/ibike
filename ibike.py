@@ -54,6 +54,14 @@ def welcome_instructor():
 	st.write("Click 'CONTINUE' below to begin setup.")
 	st.button("CONTINUE", on_click=switch_welcome)
 
+	st.markdown("\n"+"\n"+"\n")
+	st.markdown(
+	"""
+	This project is funded by NSF grant #2211066 "Integrating Undergraduate Learning in Engineering and Business to Improve Manufacturing Education". 
+	Link: https://www.nsf.gov/awardsearch/showAward?AWD_ID=2211066&HistoricalAwards=false.
+	"""
+	)
+
 def welcome_player():
 
 	st.write('# Welcome to iBIKE! 👋')
@@ -86,6 +94,14 @@ def welcome_player():
 		st.button("NEW USER", on_click=switch_welcome)
 	with col2:
 		st.button("REJOINING", on_click=switch_rejoin)
+
+	st.markdown("\n")
+	st.markdown(
+	"""
+	This project is funded by NSF grant #2211066 "Integrating Undergraduate Learning in Engineering and Business to Improve Manufacturing Education". 
+	Link: https://www.nsf.gov/awardsearch/showAward?AWD_ID=2211066&HistoricalAwards=false.
+	"""
+	)
 
 def main():
 
