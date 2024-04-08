@@ -507,7 +507,7 @@ def feedback():
 				with open(ss.filepath+"fb_m_d.txt", "w") as f:
 					f.write(fb_m_d)
 				st.success("Feedback sent!", icon="✅")
-			st.experimental_rerun() #causes the submit button to only need to be pressed once
+			#st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_d.txt'):
 				os.remove(ss.filepath+'fb_m_d.txt')
@@ -534,7 +534,7 @@ def feedback():
 				with open(ss.filepath+"fb_m_i.txt", "w") as f:
 					f.write(fb_m_i)
 				st.success("Feedback sent!", icon="✅")
-			st.experimental_rerun()
+			#st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_i.txt'):
 				os.remove(ss.filepath+'fb_m_i.txt')
@@ -561,7 +561,7 @@ def feedback():
 				with open(ss.filepath+"fb_m_pm.txt", "w") as f:
 					f.write(fb_m_pm)
 				st.success("Feedback sent!", icon="✅")
-			st.experimental_rerun()
+			#st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_pm.txt'):
 				os.remove(ss.filepath+'fb_m_pm.txt')
@@ -588,7 +588,7 @@ def feedback():
 				with open(ss.filepath+"fb_m_pum.txt", "w") as f:
 					f.write(fb_m_pum)
 				st.success("Feedback sent!", icon="✅")
-			st.experimental_rerun()
+			#st.experimental_rerun()
 		elif (clear_submission):
 			if path.isfile(ss.filepath+'fb_m_pum.txt'):
 				os.remove(ss.filepath+'fb_m_pum.txt')
