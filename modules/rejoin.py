@@ -45,7 +45,7 @@ def render():
 	for i in range(num_groups):
 		group_state = group.load(groups[i])
 		with cols[i]:
-			st.title(group_state['group_key'])
+			st.write(group_state['group_key'])
 			if group_state['player_count'] == 0:
 				st.write("No users have joined this group.")
 			for j in range(group_state['player_count']):
@@ -55,7 +55,8 @@ def render():
 				prole = 'p'+str(num)+'_role'
 				name = group_state[pname]
 				role = group_state[prole]
-				st.button(label, on_click=rejoin_begin, args=(groups[i], name, role, num))
+				button_key = f"rejoin_begin_{groups[i]}_{name}_{role}_{num}"
+				st.button(label, on_click=rejoin_begin, args=(groups[i], name, role, num), key =button_key)
 				st.write(f"{label} name: {group_state[pname]}") 
 				st.write(f"{label} role: {group_state[prole]}")
 

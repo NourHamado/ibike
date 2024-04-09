@@ -42,9 +42,8 @@ def render():
 				name = group_state[pname]
 				role = group_state[prole]
 				if name == ss.name and role == ss.role:
-					col1, col2 = st.columns(2)
+					col1, col2= st.columns([5,0.7])
 					with col1:
-						#st.button('Generate Code', on_click=lambda: (rejoin_begin(groups[i], name, role, num), switch_rejoin_view()))
 						st.button('Generate Code', on_click=rejoin_begin, args=(groups[i], name, role, num))
 						switch_rejoin_view()
 	

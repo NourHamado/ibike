@@ -189,14 +189,16 @@ def display_groups():
 				else:
 					st.write(role+':  unfilled')
 			try:
-				format.downlad_format()
+				#format.downlad_format()
 				with open(group_state.get('group_key') + '_report.zip', 'rb') as f:
   					st.download_button('Download Group Report', f, file_name=group_state.get('group_key') + '_report.zip')
 			except FileNotFoundError:
-					pass
+				pass
 			except:
-				print('An error occurred with the ' + group_state.get('group_key') + ' report.')				
-	
+				print('An error occurred with the ' + group_state.get('group_key') + ' report.')
+
+							
+
 def dashboard():
 	# function to, upon setup completion, display the instructor dashboard for the rest of the game.
 	st.title('iBIKE Instructor Dashboard')
