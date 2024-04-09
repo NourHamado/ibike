@@ -16,7 +16,7 @@ def game_reset():
 	os.mkdir(dirpath)
 	for key in ss.keys():
 		del ss[key]
-	# st.caching.clear_cache()  get streamlit to delete all session data?
+	#st.caching.clear_cache()  get streamlit to delete all session data?
 
 def reset_switch():
 	if ss.reset_requested:
@@ -162,42 +162,43 @@ def complete_game_setup():
 	game.save_game_state(ss.game_state)
 	ss.setup_complete = True
 
-def display_groups():	
+def display_groups():
 	game_state = game.load()
 	groups = game_state['groups']
 	num = len(groups)
-	cols = st.columns(num, gap='large')
+	cols = st.columns(4, gap='large')
 
 	p_roles = ['p1_role','p2_role','p3_role','p4_role','p5_role']
 	p_names = ['p1_name','p2_name','p3_name','p4_name','p5_name']
-	for i in range(num):
-		group_state = group.load(groups[i])
-		with cols[i]:
-			st.write("GROUP "+str(i+1))
-			st.write(f"User Count: {group_state['player_count']}")
-			st.write(f"Group Status: {group_state['status']}")
-			st.write(f"Current Orders: {len(group_state['orders'])}")
-			st.write(f"Completed Orders: {len(group_state['completed'])}")
-			for role in ss.roles:
-				name = None
-				for p_role in p_roles:
-					if role == group_state[p_role]:
-						idx = p_roles.index(p_role)
-						name = group_state[p_names[idx]]
-				if name:
-					st.write(role+':  '+name)
-				else:
-					st.write(role+':  unfilled')
-			try:
-				#format.downlad_format()
-				with open(group_state.get('group_key') + '_report.zip', 'rb') as f:
-  					st.download_button('Download Group Report', f, file_name=group_state.get('group_key') + '_report.zip')
-			except FileNotFoundError:
-				pass
-			except:
-				print('An error occurred with the ' + group_state.get('group_key') + ' report.')
-
-							
+	for i in range(0, num, 4):
+		for j in range(4):
+			if i + j < num:
+				group_state = group.load(groups[i + j])
+				with cols[j]:
+					st.title("GROUP "+str(i+j+1))
+					st.write(f"User Count: {group_state['player_count']}")
+					st.write(f"Group Status: {group_state['status']}")
+					st.write(f"Current Orders: {len(group_state['orders'])}")
+					st.write(f"Completed Orders: {len(group_state['completed'])}")
+					for role in ss.roles:
+						name = None
+						for p_role in p_roles:
+							if role == group_state[p_role]:
+								idx = p_roles.index(p_role)
+								name = group_state[p_names[idx]]
+						if name:
+							st.write(role+':  '+name)
+						else:
+							st.write(role+':  unfilled')
+					try:
+						with open(group_state.get('group_key') + '_report.zip', 'rb') as f:
+							st.download_button('Download Group Report', f, file_name=group_state.get('group_key') + '_report.zip')
+					except FileNotFoundError:
+						pass
+					except:
+						print('An error occurred with the ' + group_state.get('group_key') + ' report.')
+		st.write("")					
+		st.write("")
 
 def dashboard():
 	# function to, upon setup completion, display the instructor dashboard for the rest of the game.
@@ -218,13 +219,19 @@ def dashboard():
 def view_group(group_key):
 	ss.view_group = group_key
 
-def display_group_options():	
-	groups = ss.game_state['groups']
-	num = len(groups)
-	cols = st.columns(num)
-	for i in range(num):
-		with cols[i]:
-			st.button(f"{groups[i]}", on_click=view_group, args=(groups[i], ))
+def display_group_options():
+    groups = ss.game_state['groups']
+    num = len(groups)
+    rows = num // 5 + (num % 5 != 0)
+    for i in range(rows):
+        cols = st.columns(5)
+        for j in range(5):
+            index = i * 5 + j
+            if index < num:
+                with cols[j]:
+                    st.button(f"{groups[index]}", on_click=view_group, args=(groups[index], ))
+            else:
+                break
 
 def display_group_graph(group_key):
 	group_state = group.load(group_key)

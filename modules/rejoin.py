@@ -41,6 +41,7 @@ def render():
 				
 	if ss.rejoin_selected:
 		rejoin_check()
+	
 	cols = st.columns(num_groups)
 	for i in range(num_groups):
 		group_state = group.load(groups[i])

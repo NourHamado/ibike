@@ -32,8 +32,6 @@ def render():
 	for i in range(num_groups):
 		group_state = group.load(groups[i])
 		with cols[i]:
-			if group_state['player_count'] == 0:
-				st.write("No users have joined this group.")
 			for j in range(group_state['player_count']):
 				num = j+1
 				label = 'User '+str(num)
@@ -41,19 +39,23 @@ def render():
 				prole = 'p'+str(num)+'_role'
 				name = group_state[pname]
 				role = group_state[prole]
+
+				button_key = f"rejoin_begin_{groups[i]}_{name}_{role}_{num}"
 				if name == ss.name and role == ss.role:
-					col1, col2= st.columns([5,0.7])
-					with col1:
-						st.button('Generate Code', on_click=rejoin_begin, args=(groups[i], name, role, num))
-						switch_rejoin_view()
-	
+					#col1, col2= st.columns([9000,0.2])
+					#with col1:
+					st.button('Generate Code', on_click=rejoin_begin, args=(groups[i], name, role, num), key =button_key)
+					switch_rejoin_view()
+
 	if ss.rejoin_view:
 		if len(game_state['rejoin_codes']) == 0:
 			st.write("")
 		else:
 			for dict in game_state['rejoin_codes']:
-				if dict['player'] == ss.rejoin_player:
+				if dict['player'] == ss.rejoin_player and dict['name'] == ss.name and dict['role'] == ss.role:
 					st.title(f"Your Rejoin code is {dict['code']}")
+				else:
+					continue
 
 	st.write("If you get disconnected from your session for any reason, use the rejoin code to reconnect to your dashboard.")
 	st.write("Double click 'Generate Code' to get the code and view it. Please, write the code down")

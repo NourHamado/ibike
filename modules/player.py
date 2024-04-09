@@ -178,15 +178,23 @@ def group_assign(group_key):
 	
 # a function to display the available groups to join based on the current state of the game.
 def display_group_buttons():
-	st.write(f"Hello, {ss.name}! Please select one of the available groups below:")
-	
-	game_state = game.load()
-	groups = game_state['available_groups']
-	num = len(groups)
-	cols = st.columns(num)
-	for i in range(num):
-		with cols[i]:
-			st.button(f"{groups[i]}", on_click=update_init_selection, args=(0, groups[i]))
+    st.write(f"Hello, {ss.name}! Please select one of the available groups below:")
+
+    game_state = game.load()
+    groups = game_state['available_groups']
+    num = len(groups)
+    rows = num // 5 + (num % 5 != 0)
+
+    for i in range(rows):
+        cols = st.columns(5)
+        for j in range(5):
+            index = i * 5 + j
+            if index < num:
+                with cols[j]:
+                    st.button(f"{groups[index]}", on_click=update_init_selection, args=(0, groups[index]))
+            else:
+                with cols[j]:
+                    pass
 
 def role_assign(role):
 	group_state = group.load(ss.init_selection[0])
