@@ -267,7 +267,7 @@ def render():
 		st.markdown('---')
 
 		st.write("Don't click this button until you finish all the orders in the simulation")
-		if st.button("Submit Report Information"):
+		if st.button("Finish the Game"):
 			submit_report_info(solution_graph, group_state)
 	
 def feedback():
