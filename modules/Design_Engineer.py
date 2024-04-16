@@ -3,6 +3,7 @@ import numpy as np
 import sympy as sp
 import time
 import decimal
+import tkinter as tk
 import matplotlib.pyplot as plt
 from streamlit import session_state as ss
 from modules import group, player, game, player_rejoin, Button_Format as format
@@ -42,10 +43,6 @@ def render():
 		# Input parameters
 
 		# w = st.slider('Insert Wheel base (m)', min_value=0.8, max_value=1.2, value=0.8, step=0.01)
-
-		player.display_current_orders()
-
-		st.markdown('---')
 
 		with st.expander('Design Engineer Guide'):
 			st.title("Selecting Stable Bike Parameters")
@@ -264,6 +261,14 @@ def render():
 		plt.yticks([])
 		plt.show()
 		st.pyplot()
+
+		st.markdown('---')
+		player.display_current_orders()
+		st.markdown('---')
+
+		st.write("Don't click this button until you finish all the orders in the simulation")
+		if st.button("Submit Report Information"):
+			submit_report_info(solution_graph, group_state)
 	
 def feedback():
 	# writing
@@ -290,12 +295,15 @@ def feedback():
 				with open(ss.filepath+"fb_d_m.txt", "w") as f:
 					f.write(fb_d_m)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_d_m.txt'):
-				os.remove(ss.filepath+'fb_d_m.txt')
-			fb_d_m = ""
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_d_m.txt'):
+					os.remove(ss.filepath+'fb_d_m.txt')
+					st.success("Feedback cleared!", icon="✅")
+				fb_d_m = ""
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 	
 	text = ""
@@ -319,10 +327,13 @@ def feedback():
 				with open(ss.filepath+"fb_d_i.txt", "w") as f:
 					f.write(fb_d_i)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_d_i.txt'):
-				os.remove(ss.filepath+'fb_d_i.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_d_i.txt'):
+					os.remove(ss.filepath+'fb_d_i.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -346,10 +357,13 @@ def feedback():
 				with open(ss.filepath+"fb_d_pm.txt", "w") as f:
 					f.write(fb_d_pm)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_d_pm.txt'):
-				os.remove(ss.filepath+'fb_d_pm.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_d_pm.txt'):
+					os.remove(ss.filepath+'fb_d_pm.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -373,14 +387,18 @@ def feedback():
 				with open(ss.filepath+"fb_d_pum.txt", "w") as f:
 					f.write(fb_d_pum)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_d_pum.txt'):
-				os.remove(ss.filepath+'fb_d_pum.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_d_pum.txt'):
+					os.remove(ss.filepath+'fb_d_pum.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 
 	# reading	
 	st.header("Feedback **:red[From]**")
+	st.button('Click here to refresh the feedback from other players')
 	st.markdown("---")
 	if path.isfile(ss.filepath+'fb_m_d.txt'):		
 		st.write("Feedback from the **:red[Mechanical Engineer]**:")

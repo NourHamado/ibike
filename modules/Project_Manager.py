@@ -60,22 +60,31 @@ def render():
 			
 			num_requested = st.slider('Select the number of orders you would like to generate:', key="num_orders", min_value=1, max_value=ss.order_limit, value=1)
 
+		st.markdown('---')
+		ss.date = st.date_input("Choose the order complation date", value=None)
+		
+		st.markdown('---')
+		player.display_current_orders()
+		st.markdown('---')
+
 		if 'report_status' not in ss:
-				ss.report_status = ReportState.INACTIVE
+				#ss.report_status = ReportState.INACTIVE
+				ss.report_status = ReportState.GENERATING
 
 		#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
 		if(ss.report_status == ReportState.GENERATING):
 			check_report()
 		
-		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report.")
+		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report. You can download the report only once, so make sure to download it at the end of the simulation")
+		st.write(f"NOTE: You will not be able to create the report until all the players submit their report information")
 		#report button
-		if(ss.report_status == ReportState.INACTIVE):
+		'''if(ss.report_status == ReportState.INACTIVE):
 			st.button('Create Report', on_click=advance_state)
 		elif(ss.report_status == ReportState.CONFIRMING):
-			st.button('Cancel Report', on_click=reset_state)
-		elif(ss.report_status == ReportState.GENERATING):
-			st.button('Refresh') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
-		elif(ss.report_status == ReportState.FINISHED):
+			st.button('Cancel Report', on_click=reset_state)'''
+		if(ss.report_status == ReportState.GENERATING):
+			st.button('Create Report') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
+		elif (ss.report_status == ReportState.FINISHED):
 			st.button('Close Report', on_click=advance_state)
 		else:
 			print('State Error - Button') #this should never be reached unless an error occurs
@@ -86,7 +95,7 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f"Input confirmed, ask each player to refresh their orders to generate the report")			
+				st.write(f" ")			
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
@@ -105,12 +114,6 @@ def render():
 			just_df.index = list(range(1, len(just_df)+1))
 			st.dataframe(just_df, width=3000)
 		
-
-		player.display_current_orders()
-
-		st.markdown('---')
-
-		ss.date = st.date_input("Choose the order complation data", value=None)
 	
 def feedback():
 	st.header("Feedback **:red[TO]**")
@@ -136,10 +139,13 @@ def feedback():
 				with open(ss.filepath+"fb_pm_m.txt", "w") as f:
 					f.write(fb_pm_m)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun() #causes the submit button to only need to be pressed once
+			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pm_m.txt'):
-				os.remove(ss.filepath+'fb_pm_m.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pm_m.txt'):
+					os.remove(ss.filepath+'fb_pm_m.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 	
 	if path.isfile(ss.filepath+'orders.csv'):
@@ -170,10 +176,13 @@ def feedback():
 				with open(ss.filepath+"fb_pm_i.txt", "w") as f:
 					f.write(fb_pm_i)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pm_i.txt'):
-				os.remove(ss.filepath+'fb_pm_i.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pm_i.txt'):
+					os.remove(ss.filepath+'fb_pm_i.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -197,10 +206,13 @@ def feedback():
 				with open(ss.filepath+"fb_pm_pum.txt", "w") as f:
 					f.write(fb_pm_pum)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pm_pum.txt'):
-				os.remove(ss.filepath+'fb_pm_pum.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pm_pum.txt'):
+					os.remove(ss.filepath+'fb_pm_pum.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 			
 	text = ""
@@ -224,14 +236,18 @@ def feedback():
 				with open(ss.filepath+"fb_pm_d.txt", "w") as f:
 					f.write(fb_pm_d)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pm_d.txt'):
-				os.remove(ss.filepath+'fb_pm_d.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pm_d.txt'):
+					os.remove(ss.filepath+'fb_pm_d.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	# reading
 	st.header("Feedback **:red[From]**")
+	st.button('Click here to refresh the feedback from other players')
 	st.markdown("---")
 	if path.isfile(ss.filepath+'fb_d_pm.txt'):
 		st.write("Feedback from the **:red[Design Engineer]**:")
@@ -312,7 +328,8 @@ def check_report():
 	for i in range(4):
 		if((group_state['roles_reported'])[i] == True):
 			submission_count += 1
-
+	if submission_count == 4:
+		end_time = time.time()
 	if(submission_count == group_state['player_count'] - 1):
 		#resetting boolean array so that new players who join don't try to submit a report
 		if(group_state['player_count'] < 4):
@@ -321,7 +338,7 @@ def check_report():
 
 		#making the zip file and adding additional group info file if there is at least one other player
 		if(group_state['player_count'] > 1):
-			elapsed_time = decimal.Decimal(time.time() - group_state['start_time'])
+			elapsed_time = decimal.Decimal(end_time - group_state['start_time'])
 			elapsed_minutes = decimal.Decimal(elapsed_time / 60)
 			decimal.getcontext().rounding = decimal.ROUND_DOWN
 			elapsed_minutes = round(elapsed_minutes, 0)				

@@ -18,6 +18,7 @@ def game_reset():
 		del ss[key]
 	#st.caching.clear_cache()  get streamlit to delete all session data?
 
+
 def reset_switch():
 	if ss.reset_requested:
 		ss.reset_requested = False
@@ -109,9 +110,17 @@ def init():
 		with st.form("name_form"):
 			name_query = st.text_input("What is your name?")
 			name_submission = st.form_submit_button("Submit")
-			if (name_submission and len(name_query) > 0):
+			if (name_submission):
+				if (name_query == "Nour" or name_query == "Faisal Aqlan" or name_query == "mur37" or name_query == "cpn10" or name_query =="mes35"):
+					ss.name = name_query
+					st.experimental_rerun() #causes the submit button to only need to be pressed once
+				else:
+					st.write("You can not be the instructor. wait for your instructor to start the game")
+			'''if (name_submission and len(name_query) > 0 and name_query == "Nour"):
 				ss.name = name_query
 				st.experimental_rerun() #causes the submit button to only need to be pressed once
+			else:
+				st.write("You can not be the instructor. wait for your instructor to start the game")'''
 
 	elif not ss.game_state:
 	#group_num = st.text_input('How many student groups do you have?', key='group_num_input', on_change=game_state_assign)
@@ -220,18 +229,18 @@ def view_group(group_key):
 	ss.view_group = group_key
 
 def display_group_options():
-    groups = ss.game_state['groups']
-    num = len(groups)
-    rows = num // 5 + (num % 5 != 0)
-    for i in range(rows):
-        cols = st.columns(5)
-        for j in range(5):
-            index = i * 5 + j
-            if index < num:
-                with cols[j]:
-                    st.button(f"{groups[index]}", on_click=view_group, args=(groups[index], ))
-            else:
-                break
+	groups = ss.game_state['groups']
+	num = len(groups)
+	rows = num // 5 + (num % 5 != 0)
+	for i in range(rows):
+		cols = st.columns(5)
+		for j in range(5):
+			index = i * 5 + j
+			if index < num:
+				with cols[j]:
+					st.button(f"{groups[index]}", on_click=view_group, args=(groups[index], ))
+			else:
+				break
 
 def display_group_graph(group_key):
 	group_state = group.load(group_key)

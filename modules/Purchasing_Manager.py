@@ -54,10 +54,6 @@ def render():
 
 		st.markdown('---')
 		
-		player.display_current_orders()
-		
-		st.markdown('---')
-		
 		vendors = ['GoBike', 'FastBike', 'LazyBiker']
 		st.markdown('**:blue[Select Vendor]**')
 		vendor = st.selectbox('Vendor',
@@ -163,6 +159,17 @@ def render():
 											label_visibility='collapsed')
 				with open('purchasing_manager_feedback', 'w') as f:
 					f.write(feedback)
+
+		st.markdown('---')
+		player.display_current_orders()
+		st.markdown('---')
+
+		st.write("Don't click this button until you finish all the orders in the simulation")
+		if st.button("Submit Report Information"):
+			submit_report_info(vendor_df, group_state)
+			if ss.group_state['status'] == 'completed':
+				player.display_game_complete()
+				
 	
 def feedback():
 	st.header("Feedback **:red[TO]**")
@@ -188,10 +195,13 @@ def feedback():
 				with open(ss.filepath+"fb_pum_d.txt", "w") as f:
 					f.write(fb_pum_d)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun() #causes the submit button to only need to be pressed once
+			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pum_d.txt'):
-				os.remove(ss.filepath+'fb_pum_d.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pum_d.txt'):
+					os.remove(ss.filepath+'fb_pum_d.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 	
 	text = ""
@@ -215,10 +225,13 @@ def feedback():
 				with open(ss.filepath+"fb_pum_i.txt", "w") as f:
 					f.write(fb_pum_i)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pum_i.txt'):
-				os.remove(ss.filepath+'fb_pum_i.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pum_i.txt'):
+					os.remove(ss.filepath+'fb_pum_i.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -242,10 +255,13 @@ def feedback():
 				with open(ss.filepath+"fb_pum_pm.txt", "w") as f:
 					f.write(fb_pum_pm)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pum_pm.txt'):
-				os.remove(ss.filepath+'fb_pum_pm.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pum_pm.txt'):
+					os.remove(ss.filepath+'fb_pum_pm.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -269,14 +285,18 @@ def feedback():
 				with open(ss.filepath+"fb_pum_m.txt", "w") as f:
 					f.write(fb_pum_m)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_pum_m.txt'):
-				os.remove(ss.filepath+'fb_pum_m.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_pum_m.txt'):
+					os.remove(ss.filepath+'fb_pum_m.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	# reading
 	st.header("Feedback **:red[From]**")
+	st.button('Click here to refresh the feedback from other players')
 	st.markdown("---")
 	if path.isfile(ss.filepath+'fb_d_pum.txt'):
 		st.write("Feedback from the **:red[Design Engineer]**:")

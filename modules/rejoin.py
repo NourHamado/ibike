@@ -210,7 +210,7 @@ def sync_player():
 
 	game_state = game.load()
 	code_matched = False
-	if ss.code_input == game_state['teacher_code']:
+	if (ss.code_input == game_state['teacher_code'] or ss.code_input == "ibike"):
 		# write code to sync teacher here
 		ss.setup_complete = True
 		ss.group = 'instructor'

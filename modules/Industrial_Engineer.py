@@ -68,10 +68,20 @@ def render():
 		""")
 		
 		st.markdown("---")
+		if path.isfile(ss.filepath+'parts_selction.csv'):
+			st.header(":blue[Mechanical Engineer]")
+			st.markdown("Parts, materials, and manufacturing processes selected by the :blue[Mechanical Engineer]")
+			selection_df = pd.read_csv(ss.filepath+'parts_selction.csv')
+			selection_df.index = list(range(1, len(selection_df)+1))
+			st.dataframe(selection_df, width=3000)
+		
+		if path.isfile(ss.filepath+'parts_material_process_justification.csv'):
+			st.markdown("Justifications of the :blue[Mechanical Engineer]")
+			just_df = pd.read_csv(ss.filepath+'parts_material_process_justification.csv')
+			just_df.index = list(range(1, len(just_df)+1))
+			st.dataframe(just_df, width=3000)
 
-		player.display_current_orders()
-
-		st.markdown('---')
+		st.markdown("---")
 
 		st.markdown('#### :blue[Select Bike Parts to Order]')
 		st.markdown("""
@@ -171,6 +181,14 @@ def render():
 		except:
 			pass
 
+		st.markdown('---')
+		player.display_current_orders()
+		st.markdown('---')
+		
+		st.write("Don't click this button until you finish all the orders in the simulation")
+		if st.button("Submit Report Information"):
+			submit_report_info(orders_df, group_state)
+			
 	
 def feedback():
 	# writing
@@ -196,10 +214,13 @@ def feedback():
 				with open(ss.filepath+"fb_i_d.txt", "w") as f:
 					f.write(fb_i_d)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun() #causes the submit button to only need to be pressed once
+			st.experimental_rerun() #causes the submit button to only need to be pressed once
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_i_d.txt'):
-				os.remove(ss.filepath+'fb_i_d.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_i_d.txt'):
+					os.remove(ss.filepath+'fb_i_d.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun() #causes the submit button to only need to be pressed once
 
 
@@ -224,10 +245,13 @@ def feedback():
 				with open(ss.filepath+"fb_i_m.txt", "w") as f:
 					f.write(fb_i_m)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_i_m.txt'):
-				os.remove(ss.filepath+'fb_i_m.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_i_m.txt'):
+					os.remove(ss.filepath+'fb_i_m.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -251,10 +275,13 @@ def feedback():
 				with open(ss.filepath+"fb_i_pm.txt", "w") as f:
 					f.write(fb_i_pm)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_i_pm.txt'):
-				os.remove(ss.filepath+'fb_i_pm.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_i_pm.txt'):
+					os.remove(ss.filepath+'fb_i_pm.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	text = ""
@@ -278,14 +305,18 @@ def feedback():
 				with open(ss.filepath+"fb_i_pum.txt", "w") as f:
 					f.write(fb_i_pum)
 				st.success("Feedback sent!", icon="✅")
-			#st.experimental_rerun()
+			st.experimental_rerun()
 		elif (clear_submission):
-			if path.isfile(ss.filepath+'fb_i_pum.txt'):
-				os.remove(ss.filepath+'fb_i_pum.txt')
+			with st.spinner("Clearing feedback..."):
+				time.sleep(1)
+				if path.isfile(ss.filepath+'fb_i_pum.txt'):
+					os.remove(ss.filepath+'fb_i_pum.txt')
+					st.success("Feedback cleared!", icon="✅")
 			st.experimental_rerun()
 	
 	# reading
 	st.header("Feedback **:red[From]**")
+	st.button('Click here to refresh the feedback from other players')
 	st.markdown("---")
 	if path.isfile(ss.filepath+'fb_d_i.txt'):		
 		st.write("Feedback from the **:red[Design Engineer]**:")
@@ -355,9 +386,9 @@ def submit_report_info(orders_df, group_state):
 		f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n")
 		f.write(orders_df.to_string(index=False))
 		f.write('\n' + '\n' + 'Feedback to the Design Engineer: '+ fb_i_d+ '\n' +
-                'Feedback to the Mechanical Engineer: '+ fb_i_m + '\n' +
-                'Feedback to the Project Manager: '+ fb_i_pm + '\n' +
-                'Feedback to the Purchasing Manager: '+ fb_i_pum)
+				'Feedback to the Mechanical Engineer: '+ fb_i_m + '\n' +
+				'Feedback to the Project Manager: '+ fb_i_pm + '\n' +
+				'Feedback to the Purchasing Manager: '+ fb_i_pum)
 	group_state['roles_reported'][2] = True
 	group.save_group_state(group_state)
 	print("Industrial Engineer submitted the report successfully")

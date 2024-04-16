@@ -29,7 +29,11 @@ def render():
 			with tab3:
 				display_group_info()
 		else:
-			display_game_complete()
+			if(ss.role == 'Purchasing Manager' or ss.role == 'Project Manager'):
+				display_role_page()
+			else:
+				display_game_complete()
+
 
 	#time.sleep(30)
 	#st.experimental_rerun()
