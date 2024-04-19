@@ -1,3 +1,4 @@
+import shutil
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -68,8 +69,8 @@ def render():
 		st.markdown('---')
 
 		if 'report_status' not in ss:
-				#ss.report_status = ReportState.INACTIVE
-				ss.report_status = ReportState.GENERATING
+				ss.report_status = ReportState.INACTIVE
+				#ss.report_status = ReportState.GENERATING
 
 		#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
 		if(ss.report_status == ReportState.GENERATING):
@@ -78,12 +79,12 @@ def render():
 		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report. You can download the report only once, so make sure to download it at the end of the simulation")
 		st.write(f"NOTE: You will not be able to create the report until all the players submit their report information")
 		#report button
-		'''if(ss.report_status == ReportState.INACTIVE):
+		if(ss.report_status == ReportState.INACTIVE):
 			st.button('Create Report', on_click=advance_state)
 		elif(ss.report_status == ReportState.CONFIRMING):
-			st.button('Cancel Report', on_click=reset_state)'''
-		if(ss.report_status == ReportState.GENERATING):
-			st.button('Create Report') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
+			st.button('Cancel Report', on_click=reset_state)
+		elif(ss.report_status == ReportState.GENERATING):
+			st.button('Refresh') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
 		elif (ss.report_status == ReportState.FINISHED):
 			st.button('Close Report', on_click=advance_state)
 		else:
@@ -95,7 +96,7 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f" ")			
+				st.write(f"Input confirmed, generating... ")			
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
@@ -345,7 +346,28 @@ def check_report():
 			decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 			elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 			
-			try:
+			group_info_file = ss.filepath + 'report/' + 'GroupInformation' + '.txt'
+			if os.path.exists(group_info_file):
+				try:
+					with open(group_info_file, 'w') as f:
+						f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
+							elapsed_seconds) + " seconds.\n"
+													+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
+													+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
+													+ "Remaining Orders Needed for Completion: " + str(
+						ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+				except FileNotFoundError:
+					pass  # If there's any issue writing the file, just pass and continue
+
+			# Check if the directory exists before making the zip file
+			if os.path.exists(ss.filepath + 'report/'):
+				shutil.make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
+			else:
+				print("Directory doesn't exist. Unable to create the zip file.")
+
+			advance_state()
+
+			'''try:
 				with open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'w') as f:
 					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
 						elapsed_seconds) + " seconds.\n"
@@ -356,7 +378,7 @@ def check_report():
 			except FileNotFoundError:
 				pass  # If the file doesn't exist, pass and continue
 
-			make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
+			make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')'''
 
 			'''with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
 				f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
@@ -379,7 +401,7 @@ def check_report():
 				print("An unexpected error occurred:", e)
 				# Handle other exceptions here.'''
 		
-		advance_state()
+		#advance_state()
 	
 def display_pr_m_code():	
 	player_rejoin.render()
