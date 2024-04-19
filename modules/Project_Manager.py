@@ -345,12 +345,40 @@ def check_report():
 			decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
 			elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 			
-			with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
+			try:
+				with open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'w') as f:
+					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
+						elapsed_seconds) + " seconds.\n"
+												+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
+												+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
+												+ "Remaining Orders Needed for Completion: " + str(
+					ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+			except FileNotFoundError:
+				pass  # If the file doesn't exist, pass and continue
+
+			make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
+
+			'''with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
 				f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
 					   +"Orders Fufilled: " + str(len(ss.group_state['completed'])) + "\n"
 					   +"Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
 					   +"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
-			make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')
+			make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')'''
+
+			'''try:
+				with open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'w') as f:							
+					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(elapsed_seconds) + " seconds.\n"
+							+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
+							+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
+							+ "Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+				make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
+			except FileNotFoundError as e:
+				print("FileNotFoundError:", e)
+				# Handle the error here, such as creating the directory or logging the error.
+			except Exception as e:
+				print("An unexpected error occurred:", e)
+				# Handle other exceptions here.'''
+		
 		advance_state()
 	
 def display_pr_m_code():	
