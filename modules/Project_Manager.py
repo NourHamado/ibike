@@ -69,8 +69,8 @@ def render():
 		st.markdown('---')
 
 		if 'report_status' not in ss:
-				ss.report_status = ReportState.INACTIVE
-				#ss.report_status = ReportState.GENERATING
+				#ss.report_status = ReportState.INACTIVE
+				ss.report_status = ReportState.GENERATING
 
 		#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
 		if(ss.report_status == ReportState.GENERATING):
@@ -79,12 +79,12 @@ def render():
 		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report. You can download the report only once, so make sure to download it at the end of the simulation")
 		st.write(f"NOTE: You will not be able to create the report until all the players submit their report information")
 		#report button
-		if(ss.report_status == ReportState.INACTIVE):
+		'''if(ss.report_status == ReportState.INACTIVE):
 			st.button('Create Report', on_click=advance_state)
 		elif(ss.report_status == ReportState.CONFIRMING):
-			st.button('Cancel Report', on_click=reset_state)
-		elif(ss.report_status == ReportState.GENERATING):
-			st.button('Refresh') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
+			st.button('Cancel Report', on_click=reset_state)'''
+		if(ss.report_status == ReportState.GENERATING):
+			st.button('Create Report') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
 		elif (ss.report_status == ReportState.FINISHED):
 			st.button('Close Report', on_click=advance_state)
 		else:
@@ -96,7 +96,8 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f"Input confirmed, generating... ")			
+				#st.write(f"Input confirmed, generating... ")	
+				st.write(f" ")			
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
