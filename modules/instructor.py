@@ -111,7 +111,7 @@ def init():
 			name_query = st.text_input("What is your name?")
 			name_submission = st.form_submit_button("Submit")
 			if (name_submission):
-				if (name_query == "Nour" or name_query == "Faisal Aqlan" or name_query == "Mohammad Rasouli" or name_query == "Chetan Nikhare" or name_query =="Matthew Swinarski"):
+				if (name_query == "Nour" or name_query == "Faisal Aqlan" or name_query == "Mohammad Rasouli" or name_query == "Chetan Nikhare" or name_query =="Matthew Swinarski" or name_query == "Rumena"):
 					ss.name = name_query
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
 				else:
