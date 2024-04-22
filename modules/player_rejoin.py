@@ -56,9 +56,9 @@ def render():
 					st.title(f"Your Rejoin code is {dict['code']}")
 				else:
 					continue
-
+	
+	st.write("Double click 'Generate Code' to get the code and write it down")
 	st.write("If you get disconnected from your session for any reason, use the rejoin code to reconnect to your dashboard.")
-	st.write("Double click 'Generate Code' to get the code and view it. Please, write the code down")
 	st.write("NOTE:  The rejoin code contains ONLY lowercase letters and integers 0 - 9.")
 
 def rejoin_begin(group_key, name, role, num):

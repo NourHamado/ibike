@@ -6,6 +6,7 @@ import shutil
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from streamlit_pdf_viewer import pdf_viewer
 
 format.Button_Format()
 
@@ -92,6 +93,7 @@ def render():
 			while True:
 				time.sleep(5)
 				st.experimental_rerun()
+
 # Callback function to generate group_state and game_state files to manage the game
 #	and to flag the game setup as complete.
 def game_state_assign():
@@ -216,6 +218,15 @@ def dashboard():
 	st.write(f"Number of student groups: {ss.game_state['group_num']}")
 	
 	display_groups()
+	
+	# Add a file uploader for PDF files
+	uploaded_file = st.file_uploader("Instructions File", type="pdf")
+
+	# If a file is uploaded, display it using the PDF viewer
+	if uploaded_file is not None:
+		binary_data = uploaded_file.getvalue()
+		pdf_viewer(input=binary_data, width=700)
+
 	st.title("Click on one of groups below to view their order progress.")
 	display_group_options()
 

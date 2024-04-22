@@ -69,8 +69,8 @@ def render():
 		st.markdown('---')
 
 		if 'report_status' not in ss:
-				ss.report_status = ReportState.INACTIVE
-				#ss.report_status = ReportState.GENERATING
+				#ss.report_status = ReportState.INACTIVE
+				ss.report_status = ReportState.GENERATING
 
 		#this is checked up here so that clicking "Refresh" will immediately show if the report is ready
 		if(ss.report_status == ReportState.GENERATING):
@@ -79,11 +79,11 @@ def render():
 		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report. You can download the report only once, so make sure to download it at the end of the simulation")
 		st.write(f"NOTE: You will not be able to create the report until all the players submit their report information")
 		#report button
-		if(ss.report_status == ReportState.INACTIVE):
+		'''if(ss.report_status == ReportState.INACTIVE):
 			st.button('Create Report', on_click=advance_state)
 		elif(ss.report_status == ReportState.CONFIRMING):
-			st.button('Cancel Report', on_click=reset_state)
-		elif(ss.report_status == ReportState.GENERATING):
+			st.button('Cancel Report', on_click=reset_state)'''
+		if(ss.report_status == ReportState.GENERATING):
 			st.button('Create Report') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
 		elif (ss.report_status == ReportState.FINISHED):
 			st.button('Close Report', on_click=advance_state)
@@ -96,8 +96,7 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f"Input confirmed, generating... ")	
-				#st.write(f" ")			
+				st.write(f" ")			
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
@@ -321,7 +320,7 @@ def generate_report():
 	
 	advance_state()
 
-def check_report():
+'''def check_report():
 	#all other roles must update their page in order to automatically submit the info for the report, so that is checked here
 	group_state = group.load(ss.group_state.get('group_key'))
 	submission_count = 0
@@ -348,7 +347,8 @@ def check_report():
 			elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
 			
 			group_info_file = ss.filepath + 'report/' + 'GroupInformation' + '.txt'
-			if os.path.exists(group_info_file):
+			if not os.path.exists(group_info_file):
+				open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'x').close()
 				try:
 					with open(group_info_file, 'w') as f:
 						f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
@@ -366,44 +366,58 @@ def check_report():
 			else:
 				print("Directory doesn't exist. Unable to create the zip file.")
 
-			advance_state()
+	advance_state()'''
 
-			'''try:
-				with open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'w') as f:
-					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
-						elapsed_seconds) + " seconds.\n"
-												+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
-												+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
-												+ "Remaining Orders Needed for Completion: " + str(
-					ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+'''if not os.path.exists(ss.filepath+'report/'):
+			os.makedirs(ss.filepath+'report/')
+
+		with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
+			f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
+				+"Orders Fufilled: " + str(len(ss.group_state['completed'])) + "\n"
+				+"Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
+				+"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+
+		make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')'''
+
+def check_report():
+	#all other roles must update their page in order to automatically submit the info for the report, so that is checked here
+	group_state = group.load(ss.group_state.get('group_key'))
+	submission_count = 0
+
+	#checking how many players have submitted
+	for i in range(4):
+		if((group_state['roles_reported'])[i] == True):
+			submission_count += 1
+	if submission_count == 4:
+		end_time = time.time()
+	if(submission_count == group_state['player_count'] - 1):
+		#resetting boolean array so that new players who join don't try to submit a report
+		if(group_state['player_count'] < 4):
+			for i in range(4):
+				(group_state['roles_reported'])[i] = True
+
+		#making the zip file and adding additional group info file if there is at least one other player
+		if(group_state['player_count'] > 1):
+			elapsed_time = decimal.Decimal(end_time - group_state['start_time'])
+			elapsed_minutes = decimal.Decimal(elapsed_time / 60)
+			decimal.getcontext().rounding = decimal.ROUND_DOWN
+			elapsed_minutes = round(elapsed_minutes, 0)				
+			decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
+			elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
+			
+			try:
+				with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
+					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
+						+"Orders Fufilled: " + str(len(ss.group_state['completed'])) + "\n"
+						+"Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
+						+"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
+				make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')
 			except FileNotFoundError:
-				pass  # If the file doesn't exist, pass and continue
+				pass
+			except:
+				print('An error occurred with the ' + ss.filepath+'report/'+ 'GroupInformation')
+		advance_state()
 
-			make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')'''
-
-			'''with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
-				f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
-					   +"Orders Fufilled: " + str(len(ss.group_state['completed'])) + "\n"
-					   +"Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
-					   +"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
-			make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')'''
-
-			'''try:
-				with open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'w') as f:							
-					f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(elapsed_seconds) + " seconds.\n"
-							+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
-							+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
-							+ "Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
-				make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
-			except FileNotFoundError as e:
-				print("FileNotFoundError:", e)
-				# Handle the error here, such as creating the directory or logging the error.
-			except Exception as e:
-				print("An unexpected error occurred:", e)
-				# Handle other exceptions here.'''
-		
-		#advance_state()
-	
 def display_pr_m_code():	
 	player_rejoin.render()
 	st.button("CONTINUE", on_click=code_written_switch)

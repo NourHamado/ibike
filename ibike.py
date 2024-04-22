@@ -33,20 +33,20 @@ def welcome_instructor():
 	st.write('# Welcome to iBIKE! 👋')
 
 	st.markdown(
-    """
-    iBIKE is an online simuation developed to create 
-    an environment for **Mechanical Engineers**, **Design Engineers**, 
-    **Industrial Engineers**, **Project Managers**, and **Purchasing Managers** to practice their decision-making skills
-    in selecting the appropriate parts, their order quantities, best materials 
-    and manufacturing processes, parcticing supply chain management, and more.
-    """
+	"""
+	iBIKE is an online simuation developed to create 
+	an environment for **Mechanical Engineers**, **Design Engineers**, 
+	**Industrial Engineers**, **Project Managers**, and **Purchasing Managers** to practice their decision-making skills
+	in selecting the appropriate parts, their order quantities, best materials 
+	and manufacturing processes, parcticing supply chain management, and more.
+	"""
 	)
 	st.write("**A message for the instructors: You have the option to access the instructions by downloading the Word file provided for instructional guidance.**")
 	github_url = f"https://github.com/AqlanLabRepos/ibike/raw/main/modules/Instruction%20for%20instructor.docx"
 	st.markdown(f'<a href="{github_url}" download>Instructions for instructors</a>', unsafe_allow_html=True)
 
 	st.markdown("""
-        In this simulation, you will serve as the instructor, and your participants will select a group to join and potentially participate in a survey.
+		In this simulation, you will serve as the instructor, and your participants will select a group to join and potentially participate in a survey.
 	After that the users have the opportunity to assume roles such as **Project Manager**, **Design Engineer**, **Mechanical Engineer**, **Industrial Engineer**, and **Purchasing Manager**. The game concludes after a predetermined number of completed customer orders that you get to set.
 	Below is a flowchart illustrating how the game operates.""")
 	st.image('files/images/flowchart for ibike game (1).png')
@@ -67,17 +67,17 @@ def welcome_player():
 	st.write('# Welcome to iBIKE! 👋')
 
 	st.markdown(
-    """
-    iBIKE is an online simuation developed to create 
-    an environment for **Mechanical Engineers**, **Design Engineers**, 
-    **Industrial Engineers**, **Project Managers**, and **Purchasing Managers** to practice their decision-making skills
-    in selecting the appropriate parts, their order quantities, best materials 
-    and manufacturing processes, parcticing supply chain management, and more.    
-    """
+	"""
+	iBIKE is an online simuation developed to create 
+	an environment for **Mechanical Engineers**, **Design Engineers**, 
+	**Industrial Engineers**, **Project Managers**, and **Purchasing Managers** to practice their decision-making skills
+	in selecting the appropriate parts, their order quantities, best materials 
+	and manufacturing processes, parcticing supply chain management, and more.    
+	"""
 	)	
 	
 	st.markdown("""
-        In this simulation, you have the option to choose between being a 'New User' or 'Rejoining' an existing session.
+		In this simulation, you have the option to choose between being a 'New User' or 'Rejoining' an existing session.
 	New users can select a group, potentially participate in a survey, and have the opportunity to assume roles such as **Project Manager**, **Design Engineer**, **Mechanical Engineer**, **Industrial Engineer**, and **Purchasing Manager**. The game concludes after a predetermined number of completed customer orders.
 	Below is a flowchart illustrating how the game operates.""")
 	st.image('files/images/flowchart for ibike game (1).png')
@@ -146,16 +146,22 @@ def main():
 	# display_developer_buttons():
 
 	if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
-		format.Button_Format()
-		ss.is_instructor = True
-		ss.role = 'instructor'
-		ss.group = 'instructor'
-		welcome_instructor()
-
+		st.write('# Welcome to iBIKE! 👋')
+		st.write("If you are the instructor click on 'Instructor' button; otherwise, click on 'Student' Button")
+		col1, col2 = st.columns(2)
+		with col1:
+			format.Button_Format()
+			if st.button("Instructor", on_click= welcome_instructor):
+				ss.is_instructor = True
+				ss.role = 'instructor'
+				ss.group = 'instructor'
+		with col2:
+			st.button("Student", on_click = lambda: (st.write("Wait for your instructor to start the simulation") if not ss.welcomed and not ss.is_instructor else welcome_player) )
+				
 	elif ss.welcomed and ss.is_instructor:
 		format.Button_Format()
 		instructor.render()
-
+	
 	elif not ss.welcomed and not ss.is_instructor:
 		format.Button_Format()
 		welcome_player()

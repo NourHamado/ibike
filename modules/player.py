@@ -29,10 +29,10 @@ def render():
 			with tab3:
 				display_group_info()
 		else:
-			if(ss.role == 'Purchasing Manager' or ss.role == 'Project Manager'):
-				display_role_page()
-			else:
-				display_game_complete()
+			#if(ss.role == 'Purchasing Manager' or ss.role == 'Project Manager'):
+			display_role_page()
+			#else:
+			#	display_game_complete()
 
 
 	#time.sleep(30)
@@ -321,14 +321,18 @@ def init():
 	elif not ss.group and not ss.role:
 		print("Survey State: " + str(ss.survey_active));
 		if(not ss.survey_active):
-			st.button('I would like to take the survey', on_click=form.toggle_survey_state)
-			if(ss.init_selection[0] == ''):   
-				st.button("BACK", on_click=name_switch)            
+			if(ss.init_selection[0] == ''):              
 				display_group_buttons()
 			elif(ss.init_selection[1] == ''):
 				display_role_buttons(ss.init_selection[0])
 			else:
 				process_init_selection()
+			st.markdown("<br><br><br><br><br><br><br><br><br><br><br><br>", unsafe_allow_html=True)
+			col1, col2 = st.columns(2)
+			with col1:
+				st.button("BACK", on_click=name_switch) 
+			with col2:
+				st.button('I would like to take the survey', on_click=form.toggle_survey_state)
 				   
 		else:
 			survey.main_form()
