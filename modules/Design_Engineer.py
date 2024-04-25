@@ -12,7 +12,6 @@ import os
 from os import path
 
 def render():
-
 	if 'code_written' not in ss:
 		ss['code_written'] = False
 
@@ -431,6 +430,7 @@ def feedback():
 		st.markdown("---")
 
 def submit_order_info(order_key):
+
 	group_state = group.load(ss.group)
 	group_state['orders'][order_key]['wheel_base'] = (str(ss.design_parameters[0]) + ' meters')
 	group_state['orders'][order_key]['total_mass'] = (str(ss.design_parameters[1]) + ' kilograms')
@@ -465,9 +465,6 @@ def submit_report_info(fig, group_state):
 			open(ss.filepath+'fb_d_pm.txt', 'x').close()
 		with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
 				fb_d_pm = f.read()
-		
-		#with open(ss.filepath+'fb_d_pm.txt', 'r') as f:
-		#	fb_d_pm = f.read()
 				
 		if not os.path.exists(ss.filepath+'fb_d_pum.txt'):
 			open(ss.filepath+'fb_d_pum.txt', 'x').close()

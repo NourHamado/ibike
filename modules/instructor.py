@@ -1,3 +1,4 @@
+import base64
 import streamlit as st
 from streamlit import session_state as ss
 from modules import game, group, rejoin, Button_Format as format
@@ -56,10 +57,14 @@ def render():
 		ss['rejoin_requested'] = False
 	if 'code_written' not in ss:
 		ss['code_written'] = False
+	if 'uploaded_file' not in ss:
+		ss['uploaded_file'] = None
 
 	if not ss.setup_complete:
 		if not ss.name:
 			print("No Back Button")
+		elif not ss.password:
+			st.button("BACK", on_click=name_switch)
 		elif not ss.game_state:
 			st.button("BACK", on_click=name_switch)
 		elif not ss.setup_complete:
@@ -109,7 +114,16 @@ def game_state_assign():
 def init():
 	# function for instructor setup. Includes setting the instructor name and number of groups.
 	if not ss.name:
-		with st.form("name_form"):
+		# function for instructor setup. Includes setting the instructor name and number of groups.
+		if not ss.name:
+			with st.form("name_form"):
+				name_query = st.text_input("What is your name?")
+				name_submission = st.form_submit_button("Submit")
+				if (name_submission and len(name_query) > 0):
+					ss.name = name_query
+					st.experimental_rerun() #causes the submit button to only need to be pressed once
+
+		'''with st.form("name_form"):
 			name_query = st.text_input("What is your name?")
 			name_submission = st.form_submit_button("Submit")
 			if (name_submission):
@@ -117,12 +131,18 @@ def init():
 					ss.name = name_query
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
 				else:
-					st.write("You can not be the instructor. wait for your instructor to start the game")
-			'''if (name_submission and len(name_query) > 0 and name_query == "Nour"):
-				ss.name = name_query
-				st.experimental_rerun() #causes the submit button to only need to be pressed once
-			else:
-				st.write("You can not be the instructor. wait for your instructor to start the game")'''
+					st.write("You are not qualified to be an instructor. Wait for your instructor to start the simulation")'''
+
+	elif not ss.password:
+		with st.form("name_form"):
+			password_query = st.text_input("Enter the password:")
+			password_submission = st.form_submit_button("Submit")
+			if (password_submission):
+				if (password_query == "ibike999"):
+					ss.password = password_query
+					st.experimental_rerun()
+				else:
+					st.write("Wrong password. Try again")
 
 	elif not ss.game_state:
 	#group_num = st.text_input('How many student groups do you have?', key='group_num_input', on_change=game_state_assign)
@@ -139,14 +159,36 @@ def init():
 					game_state = game.init(ss.name, group_num)
 					ss.game_state = game_state
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
-		
+
 	elif not ss.setup_complete:
 		#st.button("BACK", on_click=group_switch)
 		st.write("Please specify the limit of concurrent, unfulfilled customer orders that you would like to allow, along with the total number of fulfilled orders required to complete the simulation.\nWhen you are done, click \'Complete Setup\' below.")
 		st.slider("Concurrent Unfulfilled Order Limit",min_value=0,max_value=100,value=25,step=5,key='order_limit_input')
 		st.slider("Fulfilled Orders Required to Complete the Simulation",min_value=0,max_value=500,value=100,step=10,key='completed_limit_input')
 		st.button("Complete Setup", on_click=complete_game_setup)
-	
+
+	'''elif not ss.game_state:
+		with st.form("name_form"):
+			group_query = st.text_input("How many student groups do you have?")
+			group_submission = st.form_submit_button("Submit")
+			if (group_submission):
+				try:
+					group_num = int(group_query)
+				except:
+					st.write('Please enter an integer between 1 and 10 for your group number.')
+				else:
+					if 1 <= group_num <= 10:
+						group_names = []
+						for i in range(group_num):
+							group_name_input = st.text_input(f"Enter the name of group {i+1}")
+							group_names.append(group_name_input)
+						game_state = game.init(ss.name, group_num, group_names)
+						ss.game_state = game_state
+						group_submission = st.form_submit_button("Submit Groups Names")
+						#st.experimental_rerun()
+					else:
+						st.write('Please enter an integer between 1 and 10 for your group number.')'''
+
 def name_switch():
 	if ss.name:
 		ss.name = False
@@ -226,6 +268,7 @@ def dashboard():
 	if uploaded_file is not None:
 		binary_data = uploaded_file.getvalue()
 		pdf_viewer(input=binary_data, width=700)
+	
 
 	st.title("Click on one of groups below to view their order progress.")
 	display_group_options()

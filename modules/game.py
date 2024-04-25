@@ -47,3 +47,28 @@ def init(name,group_num):
 		json.dump(game_state, file)
 
 	return game_state
+
+'''def init(name, group_num, group_names):
+    filepath = 'files/data/game_state.json'
+    game_state = {
+        'teacher_id': name,
+        'group_num': group_num,
+        'groups': [],
+        'available_groups': [],
+        'order_limit': None,
+        'completed_limit': None,
+        'rejoin_codes': [],
+        'teacher_code': rejoin.get_code()
+    }
+
+    for i in range(group_num):
+        key = 'group' + str(i + 1)
+        group.init(key)
+        game_state['available_groups'].append(key)
+        group_state = {'name': group_names[i], 'students': []}
+        game_state['groups'].append(group_state)
+
+    with open(filepath, 'w') as file:
+        json.dump(game_state, file)
+
+    return game_state'''

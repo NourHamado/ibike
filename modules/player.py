@@ -6,12 +6,16 @@ import matplotlib.pyplot as plt
 import time
 from modules import Project_Manager as pr_m, Design_Engineer as d_e, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
 from modules import mainform as survey, form13 as form, Button_Format as format
+from streamlit_pdf_viewer import pdf_viewer
 
 def render():
 	if 'setup_complete' not in ss:
 		ss['setup_complete'] = False
 	if 'order_view' not in ss:
 		ss['order_view'] = False
+	if 'uploaded_file' not in ss:
+		ss['uploaded_file'] = None
+
 	if not ss.setup_complete:
 		init()
 	else:
@@ -154,8 +158,7 @@ def display_group_info():
 			st.write(role+':  '+name)
 		else:
 			st.write(role+':  unfilled')
-
-
+	
 def display_game_complete():
 	st.title("The Simulation is Over")
 	st.write("Thank you for playing!")
@@ -182,23 +185,23 @@ def group_assign(group_key):
 	
 # a function to display the available groups to join based on the current state of the game.
 def display_group_buttons():
-    st.write(f"Hello, {ss.name}! Please select one of the available groups below:")
+	st.write(f"Hello, {ss.name}! Please select one of the available groups below:")
 
-    game_state = game.load()
-    groups = game_state['available_groups']
-    num = len(groups)
-    rows = num // 5 + (num % 5 != 0)
+	game_state = game.load()
+	groups = game_state['available_groups']
+	num = len(groups)
+	rows = num // 5 + (num % 5 != 0)
 
-    for i in range(rows):
-        cols = st.columns(5)
-        for j in range(5):
-            index = i * 5 + j
-            if index < num:
-                with cols[j]:
-                    st.button(f"{groups[index]}", on_click=update_init_selection, args=(0, groups[index]))
-            else:
-                with cols[j]:
-                    pass
+	for i in range(rows):
+		cols = st.columns(5)
+		for j in range(5):
+			index = i * 5 + j
+			if index < num:
+				with cols[j]:
+					st.button(f"{groups[index]}", on_click=update_init_selection, args=(0, groups[index]))
+			else:
+				with cols[j]:
+					pass
 
 def role_assign(role):
 	group_state = group.load(ss.init_selection[0])

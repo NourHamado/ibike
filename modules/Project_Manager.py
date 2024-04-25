@@ -7,6 +7,7 @@ import os
 import time
 from streamlit import session_state as ss
 from modules import order, group, player, game, player_rejoin
+from modules import Design_Engineer, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
 from enum import Enum
 from shutil import make_archive
 import decimal
@@ -85,7 +86,7 @@ def render():
 			st.button('Cancel Report', on_click=reset_state)'''
 		if(ss.report_status == ReportState.GENERATING):
 			st.button('Create Report') #this button doesn't really do anything, but clicking it will cause the check_report to be run again
-		elif (ss.report_status == ReportState.FINISHED):
+		elif(ss.report_status == ReportState.FINISHED):
 			st.button('Close Report', on_click=advance_state)
 		else:
 			print('State Error - Button') #this should never be reached unless an error occurs
@@ -96,7 +97,8 @@ def render():
 				st.write(f"Are you sure you want to make a report? You can continue playing, but your additional progress will not be reflected in the report.")
 				st.button('Confirm', on_click=generate_report) #this function call will advance the report state
 			elif(ss.report_status == ReportState.GENERATING):
-				st.write(f" ")			
+				#st.write(f"Input confirmed, generating...")	
+				st.write(" ")		
 			elif(ss.report_status == ReportState.FINISHED):
 				st.write(f"Report generated successfully. You may now close this report.")
 			else:
@@ -309,7 +311,12 @@ def advance_state():
 		reset_state()
 
 def reset_state():
-	ss.report_status = ReportState(1)
+	group_state = group.load(ss.group_state.get('group_key'))
+	for i in range(4):
+		group_state['roles_reported'][i] = False
+	submission_count = 0
+	group.save_group_state(group_state)
+	ss.report_status = ReportState(3)
 
 def generate_report():
 	group_state = group.load(ss.group_state.get('group_key'))
@@ -320,65 +327,6 @@ def generate_report():
 	
 	advance_state()
 
-'''def check_report():
-	#all other roles must update their page in order to automatically submit the info for the report, so that is checked here
-	group_state = group.load(ss.group_state.get('group_key'))
-	submission_count = 0
-
-	#checking how many players have submitted
-	for i in range(4):
-		if((group_state['roles_reported'])[i] == True):
-			submission_count += 1
-	if submission_count == 4:
-		end_time = time.time()
-	if(submission_count == group_state['player_count'] - 1):
-		#resetting boolean array so that new players who join don't try to submit a report
-		if(group_state['player_count'] < 4):
-			for i in range(4):
-				(group_state['roles_reported'])[i] = True
-
-		#making the zip file and adding additional group info file if there is at least one other player
-		if(group_state['player_count'] > 1):
-			elapsed_time = decimal.Decimal(end_time - group_state['start_time'])
-			elapsed_minutes = decimal.Decimal(elapsed_time / 60)
-			decimal.getcontext().rounding = decimal.ROUND_DOWN
-			elapsed_minutes = round(elapsed_minutes, 0)				
-			decimal.getcontext().rounding = decimal.ROUND_HALF_EVEN
-			elapsed_seconds = round(decimal.Decimal(elapsed_time - (elapsed_minutes * 60)), 1)
-			
-			group_info_file = ss.filepath + 'report/' + 'GroupInformation' + '.txt'
-			if not os.path.exists(group_info_file):
-				open(ss.filepath + 'report/' + 'GroupInformation' + '.txt', 'x').close()
-				try:
-					with open(group_info_file, 'w') as f:
-						f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) + " minutes and " + str(
-							elapsed_seconds) + " seconds.\n"
-													+ "Orders Fulfilled: " + str(len(ss.group_state['completed'])) + "\n"
-													+ "Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
-													+ "Remaining Orders Needed for Completion: " + str(
-						ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
-				except FileNotFoundError:
-					pass  # If there's any issue writing the file, just pass and continue
-
-			# Check if the directory exists before making the zip file
-			if os.path.exists(ss.filepath + 'report/'):
-				shutil.make_archive(ss.group_state.get('group_key') + '_report', 'zip', ss.filepath, 'report')
-			else:
-				print("Directory doesn't exist. Unable to create the zip file.")
-
-	advance_state()'''
-
-'''if not os.path.exists(ss.filepath+'report/'):
-			os.makedirs(ss.filepath+'report/')
-
-		with open(ss.filepath+'report/'+ 'GroupInformation' + '.txt', 'w') as f:							
-			f.write(str(elapsed_time) + " Time Elapsed: " + str(elapsed_minutes) +" minutes and " + str(elapsed_seconds) + " seconds.\n"
-				+"Orders Fufilled: " + str(len(ss.group_state['completed'])) + "\n"
-				+"Unfilled Orders: " + str(len(ss.group_state['orders'])) + "\n"
-				+"Remaining Orders Needed for Completion: " + str(ss.completed_limit - len(ss.group_state['completed']) - len(ss.group_state['orders'])))
-
-		make_archive(ss.group_state.get('group_key')+'_report', 'zip', ss.filepath, 'report')'''
-
 def check_report():
 	#all other roles must update their page in order to automatically submit the info for the report, so that is checked here
 	group_state = group.load(ss.group_state.get('group_key'))
@@ -388,6 +336,7 @@ def check_report():
 	for i in range(4):
 		if((group_state['roles_reported'])[i] == True):
 			submission_count += 1
+
 	if submission_count == 4:
 		end_time = time.time()
 	if(submission_count == group_state['player_count'] - 1):

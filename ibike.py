@@ -123,6 +123,8 @@ def main():
 		ss['role'] = None
 	if 'group' not in ss:
 		ss['group'] = None
+	if 'password' not in ss:
+		ss['password'] = None
 	if 'group_state' not in ss:
 		ss['group_state'] = None
 	if 'game_state' not in ss:
@@ -146,17 +148,10 @@ def main():
 	# display_developer_buttons():
 
 	if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
-		st.write('# Welcome to iBIKE! 👋')
-		st.write("If you are the instructor click on 'Instructor' button; otherwise, click on 'Student' Button")
-		col1, col2 = st.columns(2)
-		with col1:
-			format.Button_Format()
-			if st.button("Instructor", on_click= welcome_instructor):
-				ss.is_instructor = True
-				ss.role = 'instructor'
-				ss.group = 'instructor'
-		with col2:
-			st.button("Student", on_click = lambda: (st.write("Wait for your instructor to start the simulation") if not ss.welcomed and not ss.is_instructor else welcome_player) )
+		ss.is_instructor = True
+		ss.role = 'instructor'
+		ss.group = 'instructor'
+		welcome_instructor()
 				
 	elif ss.welcomed and ss.is_instructor:
 		format.Button_Format()
