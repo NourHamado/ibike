@@ -13,8 +13,6 @@ def render():
 		ss['setup_complete'] = False
 	if 'order_view' not in ss:
 		ss['order_view'] = False
-	if 'uploaded_file' not in ss:
-		ss['uploaded_file'] = None
 
 	if not ss.setup_complete:
 		init()
@@ -158,7 +156,14 @@ def display_group_info():
 			st.write(role+':  '+name)
 		else:
 			st.write(role+':  unfilled')
-	
+
+	uploaded_file = ss.uploaded_file
+	if uploaded_file is not None:
+		st.write("Uploaded File:")
+		pdf_viewer(uploaded_file, height=500, width=800)
+	else:
+		st.warning("There is no instructions file")
+
 def display_game_complete():
 	st.title("The Simulation is Over")
 	st.write("Thank you for playing!")

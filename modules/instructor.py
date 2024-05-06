@@ -57,8 +57,6 @@ def render():
 		ss['rejoin_requested'] = False
 	if 'code_written' not in ss:
 		ss['code_written'] = False
-	if 'uploaded_file' not in ss:
-		ss['uploaded_file'] = None
 
 	if not ss.setup_complete:
 		if not ss.name:
@@ -253,6 +251,7 @@ def display_groups():
 		st.write("")					
 		st.write("")
 
+
 def dashboard():
 	# function to, upon setup completion, display the instructor dashboard for the rest of the game.
 	st.title('iBIKE Instructor Dashboard')
@@ -260,16 +259,13 @@ def dashboard():
 	st.write(f"Number of student groups: {ss.game_state['group_num']}")
 	
 	display_groups()
-	
-	# Add a file uploader for PDF files
-	uploaded_file = st.file_uploader("Instructions File", type="pdf")
+		
+	uploaded_file = st.file_uploader("Select a PDF file", type="pdf")
 
-	# If a file is uploaded, display it using the PDF viewer
 	if uploaded_file is not None:
-		binary_data = uploaded_file.getvalue()
-		pdf_viewer(input=binary_data, width=700)
-	
-
+		# Store the uploaded file in the session state
+		ss.uploaded_file = uploaded_file
+		
 	st.title("Click on one of groups below to view their order progress.")
 	display_group_options()
 

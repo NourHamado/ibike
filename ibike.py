@@ -4,6 +4,9 @@ import os
 import shutil
 from modules import instructor, player, game, rejoin, Button_Format as format
 
+def switch_start():
+	ss.starting = True
+
 def switch_welcome():
 	ss.welcomed = True
 
@@ -111,6 +114,8 @@ def main():
 	# is not specified here will be contained in the 'group_state' and 'game_state'
 	# dictionaries. See those modules in 'modules' for more details. Specific roles
 	# may add other session_state variables later when their pages render.
+	if 'starting' not in ss:
+		ss['starting'] = False
 	if 'welcomed' not in ss:
 		ss['welcomed'] = False
 	if 'rejoining' not in ss:
@@ -135,6 +140,13 @@ def main():
 		ss['completed_limit'] = None
 	if 'game_complete' not in ss:
 		ss['game_complete'] = False
+	if 'instructor_clicked' not in ss:
+		ss['instructor_clicked'] = False
+	if 'student_clicked' not in ss:
+		ss['student_clicked'] = False
+	if 'uploaded_file' not in ss:
+		ss['uploaded_file'] = None
+
 		
 	# this is JUST a list of the roles that the game uses. I found myself copy/pasting this in many other functions, so I put it here instead at the top of the code as universal session state variable. That way, if any role names change they can just be changed here. Other functions now just reference ss.roles if needed.
 	if 'roles' not in ss:
@@ -146,27 +158,47 @@ def main():
 
 	# Uncomment this line of code if you want a Refresh Button and a Game Reset Button to appear on screen for easier development
 	# display_developer_buttons():
+	format.Button_Format()
+	if not ss.starting:
+		st.write('# Welcome to iBIKE! 👋')
+		st.write("If you are the instructor click on 'Instructor' button; otherwise, click on 'Student' Button")
+		col1, col2 = st.columns(2)
+		with col1:
+			if st.button("Instructor"):
+				ss.instructor_clicked = True
+				switch_start()
+			else:
+				ss.instructor_clicked = False
+		with col2:
+			if st.button("Student"):
+				ss.student_clicked = True
+				switch_start()
+			else:
+				ss.student_clicked = False
 
-	if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
-		ss.is_instructor = True
-		ss.role = 'instructor'
-		ss.group = 'instructor'
-		welcome_instructor()
-				
+		if ss.instructor_clicked:
+			if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
+				ss.is_instructor = True
+				ss.role = 'instructor'
+				ss.group = 'instructor'
+				welcome_instructor()
+			else:
+				st.write("There is an instructor in the simulation")
+
+		if ss.student_clicked:
+			if not ss.welcomed and ss.is_instructor:
+				st.write("Wait for your instructor to start the simulation")
+			else:
+				welcome_player()
+					
+					
 	elif ss.welcomed and ss.is_instructor:
-		format.Button_Format()
 		instructor.render()
-	
-	elif not ss.welcomed and not ss.is_instructor:
-		format.Button_Format()
-		welcome_player()
 
 	elif ss.welcomed and not ss.rejoining:
-		format.Button_Format()
 		player.render()
 
 	elif ss.welcomed and ss.rejoining:
-		format.Button_Format()
 		rejoin.display_rejoin_page()
 
 if __name__ == '__main__':
