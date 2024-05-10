@@ -7,8 +7,6 @@ import shutil
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from streamlit_pdf_viewer import pdf_viewer
-import pdfplumber
 
 format.Button_Format()
 

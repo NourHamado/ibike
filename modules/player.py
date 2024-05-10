@@ -7,7 +7,6 @@ import time
 from modules import Project_Manager as pr_m, Design_Engineer as d_e, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
 from modules import mainform as survey, form13 as form, Button_Format as format
 from streamlit_pdf_viewer import pdf_viewer
-import pdfplumber
 
 def render():
 	if 'setup_complete' not in ss:
