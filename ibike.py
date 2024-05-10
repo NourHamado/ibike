@@ -3,6 +3,7 @@ from streamlit import session_state as ss
 import os
 import shutil
 from modules import instructor, player, game, rejoin, Button_Format as format
+from streamlit_pdf_viewer import pdf_viewer
 
 def switch_start():
 	ss.starting = True
@@ -130,6 +131,8 @@ def main():
 		ss['group'] = None
 	if 'password' not in ss:
 		ss['password'] = None
+	if 'group_names' not in ss:
+		ss['group_names'] = None
 	if 'group_state' not in ss:
 		ss['group_state'] = None
 	if 'game_state' not in ss:

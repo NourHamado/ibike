@@ -7,6 +7,7 @@ import time
 from modules import Project_Manager as pr_m, Design_Engineer as d_e, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
 from modules import mainform as survey, form13 as form, Button_Format as format
 from streamlit_pdf_viewer import pdf_viewer
+import pdfplumber
 
 def render():
 	if 'setup_complete' not in ss:
@@ -157,12 +158,13 @@ def display_group_info():
 		else:
 			st.write(role+':  unfilled')
 
-	uploaded_file = ss.uploaded_file
-	if uploaded_file is not None:
-		st.write("Uploaded File:")
-		pdf_viewer(uploaded_file, height=500, width=800)
-	else:
-		st.warning("There is no instructions file")
+	st.write("Click the button below to download the file uploaded by the instructor.")
+
+	#if st.button("Download File"):
+	file_path = "InstructionFile.txt"  # Path to the uploaded file
+	with open(file_path, "rb") as f:
+		file_contents = f.read()
+	st.download_button(label="Download Instruction File", data=file_contents, file_name="InstructionFile.txt")
 
 def display_game_complete():
 	st.title("The Simulation is Over")

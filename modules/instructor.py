@@ -8,6 +8,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from streamlit_pdf_viewer import pdf_viewer
+import pdfplumber
 
 format.Button_Format()
 
@@ -57,6 +58,8 @@ def render():
 		ss['rejoin_requested'] = False
 	if 'code_written' not in ss:
 		ss['code_written'] = False
+	if 'group_num' not in ss:
+		ss['group_num'] = None
 
 	if not ss.setup_complete:
 		if not ss.name:
@@ -121,15 +124,6 @@ def init():
 					ss.name = name_query
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
 
-		'''with st.form("name_form"):
-			name_query = st.text_input("What is your name?")
-			name_submission = st.form_submit_button("Submit")
-			if (name_submission):
-				if (name_query == "Nour" or name_query == "Faisal Aqlan" or name_query == "Mohammad Rasouli" or name_query == "Chetan Nikhare" or name_query =="Matthew Swinarski" or name_query == "Rumena"):
-					ss.name = name_query
-					st.experimental_rerun() #causes the submit button to only need to be pressed once
-				else:
-					st.write("You are not qualified to be an instructor. Wait for your instructor to start the simulation")'''
 
 	elif not ss.password:
 		with st.form("name_form"):
@@ -157,7 +151,7 @@ def init():
 					game_state = game.init(ss.name, group_num)
 					ss.game_state = game_state
 					st.experimental_rerun() #causes the submit button to only need to be pressed once
-
+	
 	elif not ss.setup_complete:
 		#st.button("BACK", on_click=group_switch)
 		st.write("Please specify the limit of concurrent, unfulfilled customer orders that you would like to allow, along with the total number of fulfilled orders required to complete the simulation.\nWhen you are done, click \'Complete Setup\' below.")
@@ -259,12 +253,12 @@ def dashboard():
 	st.write(f"Number of student groups: {ss.game_state['group_num']}")
 	
 	display_groups()
-		
-	uploaded_file = st.file_uploader("Select a PDF file", type="pdf")
 
+	uploaded_file = st.file_uploader("Upload a txt File", "txt")
 	if uploaded_file is not None:
-		# Store the uploaded file in the session state
-		ss.uploaded_file = uploaded_file
+		with open("InstructionFile.txt", "wb") as f:
+			f.write(uploaded_file.getvalue())
+		st.success("File uploaded successfully.")
 		
 	st.title("Click on one of groups below to view their order progress.")
 	display_group_options()
