@@ -136,7 +136,6 @@ def init():
 
 	elif not ss.game_state:
 	#group_num = st.text_input('How many student groups do you have?', key='group_num_input', on_change=game_state_assign)
-		#st.button("BACK", on_click=name_switch)
 		with st.form("name_form"):
 			group_query = st.text_input("How many student groups do you have?")
 			group_submission = st.form_submit_button("Submit")
@@ -156,28 +155,6 @@ def init():
 		st.slider("Concurrent Unfulfilled Order Limit",min_value=0,max_value=100,value=25,step=5,key='order_limit_input')
 		st.slider("Fulfilled Orders Required to Complete the Simulation",min_value=0,max_value=500,value=100,step=10,key='completed_limit_input')
 		st.button("Complete Setup", on_click=complete_game_setup)
-
-	'''elif not ss.game_state:
-		with st.form("name_form"):
-			group_query = st.text_input("How many student groups do you have?")
-			group_submission = st.form_submit_button("Submit")
-			if (group_submission):
-				try:
-					group_num = int(group_query)
-				except:
-					st.write('Please enter an integer between 1 and 10 for your group number.')
-				else:
-					if 1 <= group_num <= 10:
-						group_names = []
-						for i in range(group_num):
-							group_name_input = st.text_input(f"Enter the name of group {i+1}")
-							group_names.append(group_name_input)
-						game_state = game.init(ss.name, group_num, group_names)
-						ss.game_state = game_state
-						group_submission = st.form_submit_button("Submit Groups Names")
-						#st.experimental_rerun()
-					else:
-						st.write('Please enter an integer between 1 and 10 for your group number.')'''
 
 def name_switch():
 	if ss.name:

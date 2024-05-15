@@ -159,8 +159,7 @@ def display_group_info():
 
 	st.write("Click the button below to download the file uploaded by the instructor.")
 
-	#if st.button("Download File"):
-	file_path = "InstructionFile.txt"  # Path to the uploaded file
+	file_path = "InstructionFile.txt"
 	with open(file_path, "rb") as f:
 		file_contents = f.read()
 	st.download_button(label="Download Instruction File", data=file_contents, file_name="InstructionFile.txt")

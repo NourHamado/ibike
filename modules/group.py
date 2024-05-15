@@ -81,4 +81,3 @@ def add_new_order(group_key):
 	group_state['orders'][order_key] = new_order
 	with open(filepath,'w') as file:
 		json.dump(group_state, file)
-

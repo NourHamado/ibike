@@ -484,7 +484,7 @@ def render():
 		st.markdown('---')
 
 		st.write("Don't click this button until you finish all the orders in the simulation")
-		if st.button("Finish the Game"):
+		if st.button("Finish the Simulation"):
 			submit_report_info(selection_df, justification_df, group_state)
 			if ss.group_state['status'] == 'completed':
 				player.display_game_complete()

@@ -162,41 +162,18 @@ def main():
 	# Uncomment this line of code if you want a Refresh Button and a Game Reset Button to appear on screen for easier development
 	# display_developer_buttons():
 	format.Button_Format()
-	if not ss.starting:
-		st.write('# Welcome to iBIKE! 👋')
-		st.write("If you are the instructor click on 'Instructor' button; otherwise, click on 'Student' Button")
-		col1, col2 = st.columns(2)
-		with col1:
-			if st.button("Instructor"):
-				ss.instructor_clicked = True
-				switch_start()
-			else:
-				ss.instructor_clicked = False
-		with col2:
-			if st.button("Student"):
-				ss.student_clicked = True
-				switch_start()
-			else:
-				ss.student_clicked = False
 
-		if ss.instructor_clicked:
-			if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
-				ss.is_instructor = True
-				ss.role = 'instructor'
-				ss.group = 'instructor'
-				welcome_instructor()
-			else:
-				st.write("There is an instructor in the simulation")
+	if not os.path.isfile('files/data/game_state.json') and not ss.welcomed:
+		ss.is_instructor = True
+		ss.role = 'instructor'
+		ss.group = 'instructor'
+		welcome_instructor()
 
-		if ss.student_clicked:
-			if not ss.welcomed and ss.is_instructor:
-				st.write("Wait for your instructor to start the simulation")
-			else:
-				welcome_player()
-					
-					
 	elif ss.welcomed and ss.is_instructor:
 		instructor.render()
+
+	elif not ss.welcomed and not ss.is_instructor:
+		welcome_player()
 
 	elif ss.welcomed and not ss.rejoining:
 		player.render()
