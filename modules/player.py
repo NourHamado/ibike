@@ -1,3 +1,4 @@
+from xml.dom.minidom import Document
 import streamlit as st
 from streamlit import session_state as ss
 from modules import game, group
@@ -6,7 +7,8 @@ import matplotlib.pyplot as plt
 import time
 from modules import Project_Manager as pr_m, Design_Engineer as d_e, Mechanical_Engineer as m_e, Industrial_Engineer as i_e, Purchasing_Manager as pu_m
 from modules import mainform as survey, form13 as form, Button_Format as format
-from streamlit_pdf_viewer import pdf_viewer
+import docx
+
 
 def render():
 	if 'setup_complete' not in ss:
@@ -157,12 +159,47 @@ def display_group_info():
 		else:
 			st.write(role+':  unfilled')
 
-	st.write("Click the button below to download the file uploaded by the instructor.")
+	'''st.write("Click the button below to download the file uploaded by the instructor.")
 
 	file_path = "InstructionFile.txt"
 	with open(file_path, "rb") as f:
 		file_contents = f.read()
-	st.download_button(label="Download Instruction File", data=file_contents, file_name="InstructionFile.txt")
+	st.download_button(label="Download Instruction File", data=file_contents, file_name="InstructionFile.txt")'''
+
+	'''st.write("Click the button below to download the file uploaded by the instructor.")
+
+	file_path = "uploaded_file.docx"  # Path to the uploaded file
+
+	try:
+		with open(file_path, "rb") as f:
+			file_contents = f.read()
+		st.download_button(label="Download DOCX", data=file_contents, file_name="uploaded_file.docx")
+
+		# Display the content of the DOCX file
+		doc = Document(file_path)
+		st.write("## Document Content")
+		for para in doc.paragraphs:
+			st.write(para.text)
+	except FileNotFoundError:
+		st.error("No file uploaded by the instructor yet.")'''
+	
+	st.write("Expand the bar below to view the instruction file.")
+
+	file_path = "instruction_file.docx"  # Path to the uploaded file
+
+	try:
+		with st.expander('Instructions for the Simulation'):
+			with open(file_path, "rb") as f:
+				file_contents = f.read()
+			#st.download_button(label="Download DOCX", data=file_contents, file_name="uploaded_file.docx")
+
+			# Display the content of the DOCX file
+			doc = docx.Document(file_path)  # Corrected line
+			#st.write("## Document Content")
+			for para in doc.paragraphs:
+				st.write(para.text)
+	except FileNotFoundError:
+		st.error("No file uploaded by the instructor yet.")
 
 def display_game_complete():
 	st.title("The Simulation is Over")

@@ -228,10 +228,10 @@ def dashboard():
 	st.write(f"Number of student groups: {ss.game_state['group_num']}")
 	
 	display_groups()
-
-	uploaded_file = st.file_uploader("Upload a txt File", "txt")
+	
+	uploaded_file = st.file_uploader("Please upload a DOCX file", type=["docx"])
 	if uploaded_file is not None:
-		with open("InstructionFile.txt", "wb") as f:
+		with open("instruction_file.docx", "wb") as f:
 			f.write(uploaded_file.getvalue())
 		st.success("File uploaded successfully.")
 		

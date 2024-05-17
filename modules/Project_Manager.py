@@ -11,7 +11,6 @@ from modules import Design_Engineer, Mechanical_Engineer as m_e, Industrial_Engi
 from enum import Enum
 from shutil import make_archive
 import decimal
-import datetime
 
 class ReportState(Enum):
 	INACTIVE = 1
