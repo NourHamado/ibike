@@ -159,29 +159,6 @@ def display_group_info():
 		else:
 			st.write(role+':  unfilled')
 
-	'''st.write("Click the button below to download the file uploaded by the instructor.")
-
-	file_path = "InstructionFile.txt"
-	with open(file_path, "rb") as f:
-		file_contents = f.read()
-	st.download_button(label="Download Instruction File", data=file_contents, file_name="InstructionFile.txt")'''
-
-	'''st.write("Click the button below to download the file uploaded by the instructor.")
-
-	file_path = "uploaded_file.docx"  # Path to the uploaded file
-
-	try:
-		with open(file_path, "rb") as f:
-			file_contents = f.read()
-		st.download_button(label="Download DOCX", data=file_contents, file_name="uploaded_file.docx")
-
-		# Display the content of the DOCX file
-		doc = Document(file_path)
-		st.write("## Document Content")
-		for para in doc.paragraphs:
-			st.write(para.text)
-	except FileNotFoundError:
-		st.error("No file uploaded by the instructor yet.")'''
 	
 	st.write("Expand the bar below to view the instruction file.")
 
