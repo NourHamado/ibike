@@ -159,13 +159,14 @@ def display_group_info():
 		else:
 			st.write(role+':  unfilled')
 
-	
+	st.markdown("---")
+	st.button('Refresh')
 	st.write("Expand the bar below to view the instruction file.")
 
 	file_path = "instruction_file.docx"  # Path to the uploaded file
-
-	try:
-		with st.expander('Instructions for the Simulation'):
+	
+	with st.expander('Instructions for the Simulation'):
+		try:
 			with open(file_path, "rb") as f:
 				file_contents = f.read()
 			#st.download_button(label="Download DOCX", data=file_contents, file_name="uploaded_file.docx")
@@ -175,8 +176,8 @@ def display_group_info():
 			#st.write("## Document Content")
 			for para in doc.paragraphs:
 				st.write(para.text)
-	except FileNotFoundError:
-		st.error("No file uploaded by the instructor yet.")
+		except FileNotFoundError:
+			st.write("No file uploaded by the instructor yet. Click on 'Refresh' button to refresh your page and view the instruction file.")
 
 def display_game_complete():
 	st.title("The Simulation is Over")

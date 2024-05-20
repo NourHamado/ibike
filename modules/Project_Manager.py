@@ -76,8 +76,8 @@ def render():
 		if(ss.report_status == ReportState.GENERATING):
 			check_report()
 		
-		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report. You can download the report only once, so make sure to download it at the end of the simulation")
-		st.write(f"NOTE: You will not be able to create the report until all the players submit their report information")
+		st.write(f"As Project Manager, you can report your progress to the instructor by creating a downloadable report.")
+		st.write(f"NOTE: You will not be able to create the report until all the players finish the simulation")
 		#report button
 		'''if(ss.report_status == ReportState.INACTIVE):
 			st.button('Create Report', on_click=advance_state)
