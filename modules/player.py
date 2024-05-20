@@ -160,7 +160,7 @@ def display_group_info():
 			st.write(role+':  unfilled')
 
 	st.markdown("---")
-	st.button('Refresh')
+	st.button('Refresh Instruction File')
 	st.write("Expand the bar below to view the instruction file.")
 
 	file_path = "instruction_file.docx"  # Path to the uploaded file
